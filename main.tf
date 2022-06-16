@@ -53,7 +53,7 @@ resource "aws_elasticache_cluster" "replica" {
   count = local.replication_enabled
 
   cluster_id           = local.cluster_id
-  replication_group_id = aws_elasticache_replication_group.this.id
+  replication_group_id = aws_elasticache_replication_group.this[0].id
 }
 
 resource "aws_elasticache_replication_group" "this" {
