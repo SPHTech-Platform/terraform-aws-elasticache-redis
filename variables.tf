@@ -16,7 +16,6 @@ variable "name" {
   default     = "value"
 }
 
-
 variable "tags" {
   description = "Additional tags (_e.g._ map(\"BusinessUnit\",\"ABC\")"
   type        = map(string)
@@ -112,7 +111,6 @@ variable "subnet_group_name" {
   default     = ""
 }
 
-
 variable "elasticache_parameter_group_family" {
   description = "ElastiCache parameter group family"
   type        = string
@@ -159,4 +157,10 @@ variable "parameter_group_name" {
   description = "Excisting Parameter Group name"
   type        = string
   default     = ""
+}
+
+variable "snapshot_retention_limit" {
+  description = "Number of days for which ElastiCache will retain automatic cache cluster snapshots before deleting them. For example, if you set SnapshotRetentionLimit to 5, then a snapshot that was taken today will be retained for 5 days before being deleted. If the value of snapshot_retention_limit is set to zero (0), backups are turned off. Please note that setting a snapshot_retention_limit is not supported on cache.t1.micro cache nodes"
+  type        = number
+  default     = 0
 }

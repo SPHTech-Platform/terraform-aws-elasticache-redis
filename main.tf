@@ -46,6 +46,8 @@ resource "aws_elasticache_cluster" "this" {
 
   apply_immediately = var.apply_immediately
 
+  snapshot_retention_limit = var.snapshot_retention_limit
+
   tags = var.tags
 }
 
