@@ -47,8 +47,11 @@ No modules.
 | <a name="input_name"></a> [name](#input\_name) | Name of the application | `string` | `"value"` | no |
 | <a name="input_notification_topic_arn"></a> [notification\_topic\_arn](#input\_notification\_topic\_arn) | ARN of an SNS topic to send ElastiCache notifications | `string` | `""` | no |
 | <a name="input_ok_actions"></a> [ok\_actions](#input\_ok\_actions) | The list of actions to execute when this alarm transitions into an OK state from any other state. | `list(string)` | `[]` | no |
+| <a name="input_parameter_group_name"></a> [parameter\_group\_name](#input\_parameter\_group\_name) | Excisting Parameter Group name | `string` | `""` | no |
 | <a name="input_parameters"></a> [parameters](#input\_parameters) | A list of Redis parameters to apply. Note that parameters may differ from one Redis family to another | <pre>list(object({<br>    name  = string<br>    value = string<br>  }))</pre> | `[]` | no |
 | <a name="input_port"></a> [port](#input\_port) | Memcached port | `number` | `11211` | no |
+| <a name="input_preferred_cache_cluster_azs"></a> [preferred\_cache\_cluster\_azs](#input\_preferred\_cache\_cluster\_azs) | List of EC2 availability zones in which the replication group's cache clusters will be created. The order of the availability zones in the list is considered. The first item in the list will be the primary node. Ignored when updating | `list(string)` | <pre>[<br>  "ap-southeast-1a",<br>  "ap-southeast-1b"<br>]</pre> | no |
+| <a name="input_replication_enabled"></a> [replication\_enabled](#input\_replication\_enabled) | Set to false to prevent the module from creating any resources | `bool` | `false` | no |
 | <a name="input_replication_group_id"></a> [replication\_group\_id](#input\_replication\_group\_id) | ElastiCache replication\_group\_id | `string` | `""` | no |
 | <a name="input_security_groups"></a> [security\_groups](#input\_security\_groups) | List of  Security Group IDs to place the cluster into | `list(string)` | `[]` | no |
 | <a name="input_subnet_group_name"></a> [subnet\_group\_name](#input\_subnet\_group\_name) | Subnet group name for the ElastiCache instance | `string` | `""` | no |
