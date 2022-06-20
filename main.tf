@@ -56,6 +56,8 @@ resource "aws_elasticache_cluster" "replica" {
 
   cluster_id           = local.cluster_id
   replication_group_id = aws_elasticache_replication_group.this[0].id
+
+  snapshot_retention_limit = var.snapshot_retention_limit
 }
 
 resource "aws_elasticache_replication_group" "this" {
@@ -78,12 +80,16 @@ resource "aws_elasticache_replication_group" "this" {
   security_group_ids   = var.security_groups
 
   multi_az_enabled           = true
+  at_rest_encryption_enabled = true
   transit_encryption_enabled = true
   automatic_failover_enabled = true
 
   notification_topic_arn = var.notification_topic_arn
 
   apply_immediately = var.apply_immediately
+
+  auth_token = var.auth_token
+  kms_key_id = var.kms_key_id
 
   tags = var.tags
 }
