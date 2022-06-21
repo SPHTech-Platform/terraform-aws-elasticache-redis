@@ -16,12 +16,6 @@ variable "cluster_mode_enabled" {
   default     = false
 }
 
-variable "shards_enabled" {
-  description = "Set to false to diable shards in redis cluster"
-  type        = bool
-  default     = false
-}
-
 variable "name" {
   description = "Name of the application"
   type        = string

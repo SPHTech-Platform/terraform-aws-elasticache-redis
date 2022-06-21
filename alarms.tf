@@ -25,7 +25,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
   ok_actions    = var.ok_actions
 
   depends_on = [
-    aws_elasticache_cluster.this
+    aws_elasticache_replication_group.this
   ]
 }
 
@@ -56,6 +56,6 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
   ok_actions    = var.ok_actions
 
   depends_on = [
-    aws_elasticache_cluster.this
+    aws_elasticache_replication_group.this
   ]
 }

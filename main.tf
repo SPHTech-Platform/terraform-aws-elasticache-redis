@@ -25,15 +25,6 @@ resource "aws_elasticache_subnet_group" "this" {
   subnet_ids = var.subnets
 }
 
-
-resource "aws_elasticache_cluster" "this" {
-  count = var.enabled && var.shards_enabled ? 1 : 0
-
-  cluster_id           = local.cluster_id
-  replication_group_id = aws_elasticache_replication_group.this[0].id
-
-}
-
 resource "aws_elasticache_replication_group" "this" {
   count = var.enabled ? 1 : 0
 
