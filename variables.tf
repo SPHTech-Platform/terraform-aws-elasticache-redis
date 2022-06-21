@@ -5,7 +5,19 @@ variable "enabled" {
 }
 
 variable "replication_enabled" {
-  description = "Set to false to prevent the module from creating any resources"
+  description = "Set to false to diable replication in redis cluster"
+  type        = bool
+  default     = false
+}
+
+variable "cluster_mode_enabled" {
+  description = "Set to false to diable cluster module"
+  type        = bool
+  default     = false
+}
+
+variable "shards_enabled" {
+  description = "Set to false to diable shards in redis cluster"
   type        = bool
   default     = false
 }
@@ -20,11 +32,6 @@ variable "tags" {
   description = "Additional tags (_e.g._ map(\"BusinessUnit\",\"ABC\")"
   type        = map(string)
   default     = {}
-}
-
-variable "vpc_id" {
-  description = "VPC ID"
-  type        = string
 }
 
 variable "subnets" {
@@ -94,9 +101,9 @@ variable "apply_immediately" {
 }
 
 variable "port" {
-  description = "Memcached port"
+  description = "Redis port"
   type        = number
-  default     = 11211
+  default     = 6379
 }
 
 variable "security_groups" {
@@ -175,4 +182,16 @@ variable "kms_key_id" {
   description = "The ARN of the key that you wish to use if encrypting at rest. If not supplied, uses service managed encryption. Can be specified only if `at_rest_encryption_enabled = true`"
   type        = string
   default     = null
+}
+
+variable "num_node_groups" {
+  description = "Number of node groups (shards) for this Redis replication group. Changing this number will trigger an online resizing operation before other settings modifications. Required unless `global_replication_group_id` is set"
+  type        = number
+  default     = 2
+}
+
+variable "replicas_per_node_group" {
+  description = "Number of replica nodes in each node group. Valid values are 0 to 5. Changing this number will trigger an online resizing operation before other settings modifications."
+  type        = number
+  default     = 1
 }
