@@ -40,12 +40,12 @@ output "engine_version_actual" {
 
 output "subnet_group_name" {
   description = "The Name of the ElastiCache Subnet Group."
-  value       = aws_elasticache_subnet_group.this[0].name
+  value       = try(aws_elasticache_subnet_group.this[0].name, var.subnet_group_name)
 }
 
 output "subnet_group_subnet_ids" {
   description = "The Subnet IDs of the ElastiCache Subnet Group."
-  value       = aws_elasticache_subnet_group.this[0].subnet_ids
+  value       = try(aws_elasticache_subnet_group.this[0].subnet_ids, var.subnets)
 }
 
 output "parameter_group_arn" {
