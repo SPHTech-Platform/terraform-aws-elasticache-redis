@@ -3,7 +3,7 @@ locals {
 }
 
 resource "aws_elasticache_parameter_group" "this" {
-  count = var.enabled ? 1 : 0
+  count = var.enabled && var.parameter_group_name == "" || var.parameter_group_name == null ? 1 : 0
 
   name   = var.name
   family = var.elasticache_parameter_group_family

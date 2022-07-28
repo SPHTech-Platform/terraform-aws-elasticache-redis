@@ -1,41 +1,41 @@
 output "endpoint" {
   description = "Redis primary or configuration endpoint, whichever is appropriate for the given cluster mode"
-  value       = aws_elasticache_replication_group.this[0].primary_endpoint_address
+  value       = try(aws_elasticache_replication_group.this[0].primary_endpoint_address, null)
 }
 
 output "reader_endpoint_address" {
   description = "The address of the endpoint for the reader node in the replication group, if the cluster mode is disabled"
-  value       = aws_elasticache_replication_group.this[0].reader_endpoint_address
+  value       = try(aws_elasticache_replication_group.this[0].reader_endpoint_address, null)
 }
 
 output "member_clusters" {
   description = "Redis cluster members"
-  value       = aws_elasticache_replication_group.this[0].member_clusters
+  value       = try(aws_elasticache_replication_group.this[0].member_clusters, null)
 }
 
 output "arn" {
   description = "Elasticache Replication Group ARN"
-  value       = aws_elasticache_replication_group.this[0].arn
+  value       = try(aws_elasticache_replication_group.this[0].arn, null)
 }
 
 output "cluster_enabled" {
   description = "Indicates if cluster mode is enabled."
-  value       = aws_elasticache_replication_group.this[0].cluster_enabled
+  value       = try(aws_elasticache_replication_group.this[0].cluster_enabled, null)
 }
 
 output "id" {
   description = "ID of the ElastiCache Replication Group."
-  value       = aws_elasticache_replication_group.this[0].id
+  value       = try(aws_elasticache_replication_group.this[0].id, null)
 }
 
 output "configuration_endpoint_address" {
   description = "Address of the replication group configuration endpoint when cluster mode is enabled."
-  value       = aws_elasticache_replication_group.this[0].configuration_endpoint_address
+  value       = try(aws_elasticache_replication_group.this[0].configuration_endpoint_address, null)
 }
 
 output "engine_version_actual" {
   description = "Because ElastiCache pulls the latest minor or patch for a version, this attribute returns the running version of the cache engine."
-  value       = aws_elasticache_replication_group.this[0].engine_version_actual
+  value       = try(aws_elasticache_replication_group.this[0].engine_version_actual, null)
 }
 
 output "subnet_group_name" {
@@ -50,10 +50,10 @@ output "subnet_group_subnet_ids" {
 
 output "parameter_group_arn" {
   description = "The AWS ARN associated with the parameter group."
-  value       = aws_elasticache_parameter_group.this[0].arn
+  value       = try(aws_elasticache_parameter_group.this[0].arn, null)
 }
 
 output "parameter_group_id" {
   description = "The ElastiCache parameter group name."
-  value       = aws_elasticache_parameter_group.this[0].id
+  value       = try(aws_elasticache_parameter_group.this[0].id, null)
 }
