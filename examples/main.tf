@@ -29,6 +29,8 @@ module "redis" {
   subnet_group_name                  = "default"
   elasticache_parameter_group_family = "redis5.0"
 
+  parameter_group_name = "just_a_group_name"
+
   cluster_size = 1
 
   apply_immediately = true
