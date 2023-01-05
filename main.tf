@@ -1,5 +1,17 @@
 locals {
   cluster_id = coalesce(var.cluster_id, var.name)
+
+  cluster_size = var.replication_enabled ? var.cluster_size >= 2 ? var.cluster_size : 2 : var.cluster_size
+
+  num_nodes = var.cluster_mode_enabled ? var.num_node_groups * var.replicas_per_node_group : local.cluster_size
+
+  parameters = var.cluster_mode_enabled ? concat(
+    var.parameters,
+    [{
+      name  = "cluster-enabled"
+      value = "yes"
+    }]
+  ) : var.parameters
 }
 
 resource "aws_elasticache_parameter_group" "this" {
@@ -9,7 +21,7 @@ resource "aws_elasticache_parameter_group" "this" {
   family = var.elasticache_parameter_group_family
 
   dynamic "parameter" {
-    for_each = var.parameters
+    for_each = local.parameters
 
     content {
       name  = parameter.value.name
@@ -36,9 +48,9 @@ resource "aws_elasticache_replication_group" "this" {
   port           = var.port
 
   node_type          = var.instance_type
-  num_cache_clusters = var.replication_enabled ? var.cluster_size >= 2 ? var.cluster_size : 2 : var.cluster_size
+  num_cache_clusters = var.cluster_mode_enabled ? null : local.cluster_size
 
-  preferred_cache_cluster_azs = var.replication_enabled ? var.preferred_cache_cluster_azs : null
+  preferred_cache_cluster_azs = var.replication_enabled && !var.cluster_mode_enabled ? var.preferred_cache_cluster_azs : null
 
   parameter_group_name = var.parameter_group_name != "" ? var.parameter_group_name : aws_elasticache_parameter_group.this[0].name
   subnet_group_name    = try(aws_elasticache_subnet_group.this[0].name, var.subnet_group_name)
