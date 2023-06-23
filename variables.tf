@@ -55,7 +55,7 @@ variable "instance_type" {
 variable "engine_version" {
   description = "Redis engine version. https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/supported-engine-versions.html"
   type        = string
-  default     = "redis7.0"
+  default     = "7.0"
 }
 
 variable "alarm_cpu_threshold_percent" {
