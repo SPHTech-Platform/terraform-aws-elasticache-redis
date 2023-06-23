@@ -115,7 +115,7 @@ variable "subnet_group_name" {
 variable "elasticache_parameter_group_family" {
   description = "ElastiCache parameter group family"
   type        = string
-  default     = "memcached1.6"
+  default     = "redis7"
 }
 
 variable "replication_group_id" {
