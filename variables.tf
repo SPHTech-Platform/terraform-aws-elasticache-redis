@@ -142,7 +142,7 @@ variable "cluster_id" {
 variable "create_elasticache_subnet_group" {
   description = "Create Elasticache Subnet Group"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "preferred_cache_cluster_azs" {
