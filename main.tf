@@ -33,7 +33,7 @@ resource "aws_elasticache_parameter_group" "this" {
 resource "aws_elasticache_subnet_group" "this" {
   count = var.enabled && var.create_elasticache_subnet_group ? 1 : 0
 
-  name       = var.subnet_group_name
+  name       = format("%s_subnet_group", var.name)
   subnet_ids = var.subnets
 }
 
