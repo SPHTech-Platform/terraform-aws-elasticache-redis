@@ -53,9 +53,9 @@ variable "instance_type" {
 }
 
 variable "engine_version" {
-  description = "Memcached engine version. For more info, see https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/supported-engine-versions.html"
+  description = "Redis engine version. https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/supported-engine-versions.html"
   type        = string
-  default     = "1.6.6"
+  default     = "redis7.0"
 }
 
 variable "alarm_cpu_threshold_percent" {
