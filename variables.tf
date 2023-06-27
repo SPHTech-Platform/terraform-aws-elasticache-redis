@@ -53,9 +53,9 @@ variable "instance_type" {
 }
 
 variable "engine_version" {
-  description = "Memcached engine version. For more info, see https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/supported-engine-versions.html"
+  description = "Redis engine version. https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/supported-engine-versions.html"
   type        = string
-  default     = "1.6.6"
+  default     = "7.0"
 }
 
 variable "alarm_cpu_threshold_percent" {
@@ -115,7 +115,7 @@ variable "subnet_group_name" {
 variable "elasticache_parameter_group_family" {
   description = "ElastiCache parameter group family"
   type        = string
-  default     = "memcached1.6"
+  default     = "redis7"
 }
 
 variable "replication_group_id" {
@@ -142,7 +142,7 @@ variable "cluster_id" {
 variable "create_elasticache_subnet_group" {
   description = "Create Elasticache Subnet Group"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "preferred_cache_cluster_azs" {
