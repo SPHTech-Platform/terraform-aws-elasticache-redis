@@ -189,3 +189,9 @@ variable "replicas_per_node_group" {
   type        = number
   default     = 1
 }
+
+variable "transit_encryption_enabled" {
+  description = "Whether to enable in transit encryption"
+  type        = bool
+  default     = true
+}

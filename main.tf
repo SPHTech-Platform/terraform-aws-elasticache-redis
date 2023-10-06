@@ -58,7 +58,7 @@ resource "aws_elasticache_replication_group" "this" {
 
   multi_az_enabled           = var.replication_enabled ? true : false
   at_rest_encryption_enabled = true
-  transit_encryption_enabled = false
+  transit_encryption_enabled = var.transit_encryption_enabled
   automatic_failover_enabled = var.replication_enabled ? true : false
 
   notification_topic_arn = var.notification_topic_arn
