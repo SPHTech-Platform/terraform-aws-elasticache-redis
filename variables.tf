@@ -189,3 +189,9 @@ variable "replicas_per_node_group" {
   type        = number
   default     = 1
 }
+
+variable "use_serverless" {
+  description = "Use serverless ElastiCache service"
+  type        = bool
+  default     = false
+}

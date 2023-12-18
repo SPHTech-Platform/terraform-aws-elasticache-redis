@@ -38,7 +38,7 @@ resource "aws_elasticache_subnet_group" "this" {
 }
 
 resource "aws_elasticache_replication_group" "this" {
-  count = var.enabled ? 1 : 0
+  count = var.enabled && !var.use_serverless ? 1 : 0
 
   replication_group_id = var.replication_group_id == "" ? local.cluster_id : var.replication_group_id
   description          = "Redis Cluster Rep"
@@ -70,6 +70,38 @@ resource "aws_elasticache_replication_group" "this" {
 
   num_node_groups         = var.cluster_mode_enabled ? var.num_node_groups : null
   replicas_per_node_group = var.cluster_mode_enabled ? var.replicas_per_node_group : null
+
+  tags = var.tags
+}
+
+resource "aws_elasticache_serverless" "this" {
+  count = var.enabled && var.use_serverless ? 1 : 0
+
+  serverless_cache_name = var.name
+  description           = "NULL"
+
+  engine               = "redis"
+  major_engine_version = var.engine_version
+
+  cache_usage_limits {
+    data_storage {
+      maximum = 10
+      unit    = "GB"
+    }
+    ecpu_per_second {
+      maximum = 5
+    }
+  }
+
+  daily_snapshot_time = "09:00"
+  kms_key_id          = var.kms_key_id
+
+  security_group_ids = var.security_groups
+  subnet_ids         = var.subnets
+
+  snapshot_arns            = []
+  snapshot_retention_limit = 14
+  user_group_id            = "NULL"
 
   tags = var.tags
 }
