@@ -74,34 +74,37 @@ resource "aws_elasticache_replication_group" "this" {
   tags = var.tags
 }
 
-resource "aws_elasticache_serverless" "this" {
+resource "awscc_elasticache_serverless_cache" "this" {
   count = var.enabled && var.use_serverless ? 1 : 0
 
   serverless_cache_name = var.name
-  description           = "NULL"
+  description           = "${var.name} ElastiCache Redis Serverless"
+  engine                = "redis"
+  major_engine_version  = var.engine_version
 
-  engine               = "redis"
-  major_engine_version = var.engine_version
-
-  cache_usage_limits {
-    data_storage {
-      maximum = 10
+  cache_usage_limits = {
+    data_storage = {
+      maximum = var.max_data_storage
       unit    = "GB"
     }
-    ecpu_per_second {
-      maximum = 5
+    ecpu_per_second = {
+      maximum = var.max_ecpu_per_second
     }
   }
 
-  daily_snapshot_time = "09:00"
+  final_snapshot_name = "${var.name}-elasticache-serverless-final-snapshot"
   kms_key_id          = var.kms_key_id
+  security_group_ids  = var.security_groups
+  subnet_ids          = var.subnets
 
-  security_group_ids = var.security_groups
-  subnet_ids         = var.subnets
+  daily_snapshot_time      = var.daily_snapshot_time
+  snapshot_arns_to_restore = var.snapshot_arns_to_restore
+  snapshot_retention_limit = var.snapshot_retention_limit
 
-  snapshot_arns            = []
-  snapshot_retention_limit = 14
-  user_group_id            = "NULL"
-
-  tags = var.tags
+  tags = toset([
+    for key, value in var.tags : {
+      key   = key
+      value = value
+    }
+  ])
 }
