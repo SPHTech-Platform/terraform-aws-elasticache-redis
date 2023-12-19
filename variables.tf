@@ -155,7 +155,7 @@ variable "preferred_cache_cluster_azs" {
 }
 
 variable "parameter_group_name" {
-  description = "Excisting Parameter Group name"
+  description = "Existing Parameter Group name"
   type        = string
   default     = ""
 }

@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
-  count = var.enabled ? local.num_nodes : 0
+  count = var.enabled && !var.use_serverless ? local.num_nodes : 0
 
   alarm_name        = "${tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]}-cpu-utilization"
   alarm_description = "Redis cluster CPU utilization"
@@ -30,7 +30,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_memory" {
-  count = var.enabled ? local.num_nodes : 0
+  count = var.enabled && !var.use_serverless ? local.num_nodes : 0
 
   alarm_name        = "${tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]}-freeable-memory"
   alarm_description = "Redis cluster freeable memory"
