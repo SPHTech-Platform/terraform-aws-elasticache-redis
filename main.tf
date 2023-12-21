@@ -92,6 +92,8 @@ resource "awscc_elasticache_serverless_cache" "this" {
     }
   }
 
+  user_group_id = var.user_group_id
+
   final_snapshot_name = "${var.name}-elasticache-serverless-final-snapshot"
   kms_key_id          = var.kms_key_id
   security_group_ids  = var.security_groups
