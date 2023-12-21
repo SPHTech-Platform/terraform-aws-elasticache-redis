@@ -15,7 +15,7 @@ output "member_clusters" {
 
 output "arn" {
   description = "Elasticache Replication Group ARN"
-  value       = try(aws_elasticache_replication_group.this[0].arn, null)
+  value       = var.use_serverless ? try(awscc_elasticache_serverless_cache.this[0].arn, null) : try(aws_elasticache_replication_group.this[0].arn, null)
 }
 
 output "cluster_enabled" {
