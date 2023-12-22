@@ -61,10 +61,10 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
 }
 
 # ElastiCache Serverless
-resource "aws_cloudwatch_metric_alarm" "cache_ecpu" {
+resource "aws_cloudwatch_metric_alarm" "cache_serverless_ecpu" {
   count = var.enabled && var.use_serverless ? 1 : 0
 
-  alarm_name        = "${awscc_elasticache_serverless_cache.this[0].serverless_cache_name}-cpu-utilization"
+  alarm_name        = "${awscc_elasticache_serverless_cache.this[0].serverless_cache_name}-ecpu-utilization"
   alarm_description = "Redis serverless ECPU utilization"
 
   comparison_operator = "GreaterThanThreshold"
@@ -92,7 +92,38 @@ resource "aws_cloudwatch_metric_alarm" "cache_ecpu" {
   ]
 }
 
-resource "aws_cloudwatch_metric_alarm" "cache_throttled_commands" {
+resource "aws_cloudwatch_metric_alarm" "cache_serverless_memory" {
+  count = var.enabled && var.use_serverless ? 1 : 0
+
+  alarm_name        = "${awscc_elasticache_serverless_cache.this[0].serverless_cache_name}-max-memory"
+  alarm_description = "Redis serverless max memory"
+
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+
+  metric_name = "BytesUsedForCache"
+  namespace   = "AWS/ElastiCache"
+
+  period    = 60
+  statistic = "Average"
+
+  threshold = (var.max_data_storage * 1024 * 1024 * 1024) - var.alarm_memory_threshold_bytes
+
+  tags = var.tags
+
+  dimensions = {
+    CacheClusterId = awscc_elasticache_serverless_cache.this[0].serverless_cache_name
+  }
+
+  alarm_actions = var.alarm_actions
+  ok_actions    = var.ok_actions
+
+  depends_on = [
+    aws_elasticache_replication_group.this
+  ]
+}
+
+resource "aws_cloudwatch_metric_alarm" "cache_serverless_throttled_commands" {
   count = var.enabled && var.use_serverless ? 1 : 0
 
   alarm_name        = "${awscc_elasticache_serverless_cache.this[0].serverless_cache_name}-throttled-commands"
@@ -110,7 +141,9 @@ resource "aws_cloudwatch_metric_alarm" "cache_throttled_commands" {
   threshold = 0
 
   tags       = var.tags
-  dimensions = {}
+  dimensions = {
+    CacheClusterId = awscc_elasticache_serverless_cache.this[0].serverless_cache_name
+  }
 
   alarm_actions = var.alarm_actions
   ok_actions    = var.ok_actions

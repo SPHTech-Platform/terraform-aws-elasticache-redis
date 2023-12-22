@@ -199,7 +199,7 @@ variable "use_serverless" {
 
 variable "max_data_storage" {
   type        = number
-  description = "The maximun cached data capacity of the Serverless Cache"
+  description = "The maximun cached data capacity of the Serverless Cache in GB"
   default     = 10
 
   validation {
@@ -222,7 +222,7 @@ variable "max_ecpu_per_second" {
 variable "daily_snapshot_time" {
   type        = string
   description = "The daily time range (in UTC) during which the service takes automatic snapshot of the Serverless Cache"
-  default     = "09:00"
+  default     = "18:00"
 }
 
 variable "snapshot_arns_to_restore" {
@@ -231,8 +231,8 @@ variable "snapshot_arns_to_restore" {
   default     = []
 }
 
-variable "user_group_id" {
+variable "serverless_user_group_id" {
   type        = string
-  description = "The ID of the user group"
+  description = "The ID of the user group for Serverless Cache"
   default     = ""
 }
