@@ -107,7 +107,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_memory" {
   period    = 60
   statistic = "Average"
 
-  threshold = (var.max_data_storage * 1024 * 1024 * 1024) - var.alarm_memory_threshold_bytes
+  threshold = (var.max_data_storage * 1000 * 1000 * 1000) - var.alarm_memory_threshold_bytes
 
   tags = var.tags
 
