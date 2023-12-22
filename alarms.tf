@@ -78,7 +78,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_ecpu" {
 
   tags = var.tags
 
-  threshold = ceil(var.max_ecpu_per_second * var.alarm_cpu_threshold_percent / 100)
+  threshold = ceil(var.max_ecpu_per_second * var.alarm_ecpu_threshold_percent / 100)
 
   dimensions = {
     CacheClusterId = awscc_elasticache_serverless_cache.this[0].serverless_cache_name
@@ -92,11 +92,11 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_ecpu" {
   ]
 }
 
-resource "aws_cloudwatch_metric_alarm" "cache_serverless_memory" {
+resource "aws_cloudwatch_metric_alarm" "cache_serverless_data" {
   count = var.enabled && var.use_serverless ? 1 : 0
 
-  alarm_name        = "${awscc_elasticache_serverless_cache.this[0].serverless_cache_name}-max-memory"
-  alarm_description = "Redis serverless max memory"
+  alarm_name        = "${awscc_elasticache_serverless_cache.this[0].serverless_cache_name}-data-storage"
+  alarm_description = "Redis serverless data storage"
 
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
@@ -107,7 +107,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_memory" {
   period    = 60
   statistic = "Average"
 
-  threshold = (var.max_data_storage * 1000 * 1000 * 1000) - var.alarm_memory_threshold_bytes
+  threshold = ceil(var.max_data_storage * var.alarm_data_threshold_percent / 100)
 
   tags = var.tags
 

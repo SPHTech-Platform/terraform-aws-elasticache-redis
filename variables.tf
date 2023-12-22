@@ -64,10 +64,22 @@ variable "alarm_cpu_threshold_percent" {
   default     = 75
 }
 
+variable "alarm_ecpu_threshold_percent" {
+  description = "ECPU threshold alarm level for elasticache serverless"
+  type        = number
+  default     = 75
+}
+
 variable "alarm_memory_threshold_bytes" {
   description = "Alarm memory threshold bytes"
   type        = number
   default     = 10000000 # 10MB
+}
+
+variable "alarm_data_threshold_percent" {
+  description = "Data threshold alarm level for elasticache serverless"
+  type        = number
+  default     = 75
 }
 
 variable "notification_topic_arn" {
