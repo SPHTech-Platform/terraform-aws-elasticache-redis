@@ -107,7 +107,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_data" {
   period    = 60
   statistic = "Average"
 
-  threshold = ceil(var.max_data_storage * var.alarm_data_threshold_percent / 100)
+  threshold = ceil((var.max_data_storage * 1000 * 1000 * 1000) * var.alarm_data_threshold_percent / 100)
 
   tags = var.tags
 
