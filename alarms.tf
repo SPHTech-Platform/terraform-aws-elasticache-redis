@@ -140,7 +140,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_throttled_commands" {
 
   threshold = 0
 
-  tags       = var.tags
+  tags = var.tags
   dimensions = {
     CacheClusterId = awscc_elasticache_serverless_cache.this[0].serverless_cache_name
   }
