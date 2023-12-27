@@ -103,10 +103,10 @@ resource "awscc_elasticache_serverless_cache" "this" {
   snapshot_arns_to_restore = var.snapshot_arns_to_restore
   snapshot_retention_limit = var.snapshot_retention_limit
 
-  tags = toset([
+  tags = [
     for key, value in var.tags : {
       key   = key
       value = value
     }
-  ])
+  ]
 }
