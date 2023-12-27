@@ -243,8 +243,8 @@ variable "snapshot_arns_to_restore" {
   default     = []
 }
 
-variable "serverless_user_group_id" {
+variable "user_group_id" {
   type        = string
-  description = "The ID of the user group for Serverless Cache"
+  description = "The ID of the user group Elasticache"
   default     = ""
 }
