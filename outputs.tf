@@ -1,6 +1,6 @@
 output "endpoint" {
   description = "Redis primary or configuration endpoint, whichever is appropriate for the given cluster mode"
-  value       = var.use_serverless ? try(awscc_elasticache_serverless_cache.this[0].endpoint.address, null) : try(aws_elasticache_replication_group.this[0].primary_endpoint_address, null)
+  value       = var.use_serverless ? try(aws_elasticache_serverless_cache.this[0].endpoint, null) : try(aws_elasticache_replication_group.this[0].primary_endpoint_address, null)
 }
 
 output "reader_endpoint_address" {
@@ -15,7 +15,7 @@ output "member_clusters" {
 
 output "arn" {
   description = "Elasticache Replication Group ARN"
-  value       = var.use_serverless ? try(awscc_elasticache_serverless_cache.this[0].arn, null) : try(aws_elasticache_replication_group.this[0].arn, null)
+  value       = var.use_serverless ? try(aws_elasticache_serverless_cache.this[0].arn, null) : try(aws_elasticache_replication_group.this[0].arn, null)
 }
 
 output "cluster_enabled" {

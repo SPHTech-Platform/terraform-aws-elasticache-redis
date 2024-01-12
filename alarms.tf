@@ -64,7 +64,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
 resource "aws_cloudwatch_metric_alarm" "cache_serverless_ecpu" {
   count = var.enabled && var.use_serverless ? 1 : 0
 
-  alarm_name        = "${awscc_elasticache_serverless_cache.this[0].serverless_cache_name}-ecpu-utilization"
+  alarm_name        = "${aws_elasticache_serverless_cache.this[0].id}-ecpu-utilization"
   alarm_description = "Redis serverless ECPU utilization"
 
   comparison_operator = "GreaterThanThreshold"
@@ -81,21 +81,21 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_ecpu" {
   threshold = ceil(var.max_ecpu_per_second * var.alarm_ecpu_threshold_percent / 100)
 
   dimensions = {
-    CacheClusterId = awscc_elasticache_serverless_cache.this[0].serverless_cache_name
+    CacheClusterId = aws_elasticache_serverless_cache.this[0].id
   }
 
   alarm_actions = var.alarm_actions
   ok_actions    = var.ok_actions
 
   depends_on = [
-    awscc_elasticache_serverless_cache.this
+    aws_elasticache_serverless_cache.this
   ]
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_serverless_data" {
   count = var.enabled && var.use_serverless ? 1 : 0
 
-  alarm_name        = "${awscc_elasticache_serverless_cache.this[0].serverless_cache_name}-data-storage"
+  alarm_name        = "${aws_elasticache_serverless_cache.this[0].id}-data-storage"
   alarm_description = "Redis serverless data storage"
 
   comparison_operator = "GreaterThanThreshold"
@@ -112,7 +112,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_data" {
   tags = var.tags
 
   dimensions = {
-    CacheClusterId = awscc_elasticache_serverless_cache.this[0].serverless_cache_name
+    CacheClusterId = aws_elasticache_serverless_cache.this[0].id
   }
 
   alarm_actions = var.alarm_actions
@@ -126,7 +126,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_data" {
 resource "aws_cloudwatch_metric_alarm" "cache_serverless_throttled_commands" {
   count = var.enabled && var.use_serverless ? 1 : 0
 
-  alarm_name        = "${awscc_elasticache_serverless_cache.this[0].serverless_cache_name}-throttled-commands"
+  alarm_name        = "${aws_elasticache_serverless_cache.this[0].id}-throttled-commands"
   alarm_description = "Redis serverless throttled commands"
 
   comparison_operator = "GreaterThanThreshold"
@@ -142,13 +142,13 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_throttled_commands" {
 
   tags = var.tags
   dimensions = {
-    CacheClusterId = awscc_elasticache_serverless_cache.this[0].serverless_cache_name
+    CacheClusterId = aws_elasticache_serverless_cache.this[0].id
   }
 
   alarm_actions = var.alarm_actions
   ok_actions    = var.ok_actions
 
   depends_on = [
-    awscc_elasticache_serverless_cache.this
+    aws_elasticache_serverless_cache.this
   ]
 }
