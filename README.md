@@ -4,15 +4,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
-| <a name="requirement_awscc"></a> [awscc](#requirement\_awscc) | >= 0.67.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.32 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.5.0 |
-| <a name="provider_awscc"></a> [awscc](#provider\_awscc) | 0.67.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.32.0 |
 
 ## Modules
 
@@ -29,8 +27,8 @@ No modules.
 | [aws_cloudwatch_metric_alarm.cache_serverless_throttled_commands](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_elasticache_parameter_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elasticache_parameter_group) | resource |
 | [aws_elasticache_replication_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elasticache_replication_group) | resource |
+| [aws_elasticache_serverless_cache.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elasticache_serverless_cache) | resource |
 | [aws_elasticache_subnet_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elasticache_subnet_group) | resource |
-| [awscc_elasticache_serverless_cache.this](https://registry.terraform.io/providers/hashicorp/awscc/latest/docs/resources/elasticache_serverless_cache) | resource |
 
 ## Inputs
 
@@ -68,13 +66,13 @@ No modules.
 | <a name="input_replication_enabled"></a> [replication\_enabled](#input\_replication\_enabled) | Set to false to diable replication in redis cluster | `bool` | `false` | no |
 | <a name="input_replication_group_id"></a> [replication\_group\_id](#input\_replication\_group\_id) | ElastiCache replication\_group\_id | `string` | `""` | no |
 | <a name="input_security_groups"></a> [security\_groups](#input\_security\_groups) | List of  Security Group IDs to place the cluster into | `list(string)` | `[]` | no |
-| <a name="input_serverless_user_group_id"></a> [serverless\_user\_group\_id](#input\_serverless\_user\_group\_id) | The ID of the user group for Serverless Cache | `string` | `""` | no |
 | <a name="input_snapshot_arns_to_restore"></a> [snapshot\_arns\_to\_restore](#input\_snapshot\_arns\_to\_restore) | The ARN's of snapshot to restore Serverless Cache | `list(string)` | `[]` | no |
 | <a name="input_snapshot_retention_limit"></a> [snapshot\_retention\_limit](#input\_snapshot\_retention\_limit) | Number of days for which ElastiCache will retain automatic cache cluster snapshots before deleting them. For example, if you set SnapshotRetentionLimit to 5, then a snapshot that was taken today will be retained for 5 days before being deleted. If the value of snapshot\_retention\_limit is set to zero (0), backups are turned off. Please note that setting a snapshot\_retention\_limit is not supported on cache.t1.micro cache nodes | `number` | `5` | no |
 | <a name="input_subnet_group_name"></a> [subnet\_group\_name](#input\_subnet\_group\_name) | Subnet group name for the ElastiCache instance | `string` | `""` | no |
 | <a name="input_subnets"></a> [subnets](#input\_subnets) | AWS subnet ids | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (\_e.g.\_ map("BusinessUnit","ABC") | `map(string)` | `{}` | no |
 | <a name="input_use_serverless"></a> [use\_serverless](#input\_use\_serverless) | Use serverless ElastiCache service | `bool` | `false` | no |
+| <a name="input_user_group_id"></a> [user\_group\_id](#input\_user\_group\_id) | The ID of the user group Elasticache | `string` | `""` | no |
 
 ## Outputs
 
