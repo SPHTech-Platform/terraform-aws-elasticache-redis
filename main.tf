@@ -73,6 +73,11 @@ resource "aws_elasticache_replication_group" "this" {
 
   user_group_ids = [var.user_group_id]
 
+  snapshot_retention_limit = var.instance_type != "cache.t1.micro" ? var.snapshot_retention_limit : 0
+  snapshot_window          = var.snapshot_window
+  snapshot_arns            = var.snapshot_arns
+  snapshot_name            = var.snapshot_name
+
   tags = var.tags
 }
 

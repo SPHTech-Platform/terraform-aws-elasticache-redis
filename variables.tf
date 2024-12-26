@@ -248,3 +248,21 @@ variable "user_group_id" {
   description = "The ID of the user group Elasticache"
   default     = ""
 }
+
+variable "snapshot_window" {
+  type        = string
+  description = "The daily time range (in UTC) during which ElastiCache begins taking a daily snapshot of the node group (shard) specified by SnapshottingClusterId"
+  default     = "00:00-01:00"
+}
+
+variable "snapshot_arns" {
+  type        = list(string)
+  description = "The ARN of the snapshot from which to restore data into the new node group (shard)"
+  default     = []
+}
+
+variable "snapshot_name" {
+  type        = string
+  description = "The name of the snapshot from which to restore data into the new node group (shard)"
+  default     = ""
+}
