@@ -178,10 +178,22 @@ variable "snapshot_retention_limit" {
   default     = 5
 }
 
+variable "transit_encryption_enabled" {
+  description = "Whether to enable encryption in transit"
+  type        = string
+  default     = true
+}
+
 variable "auth_token" {
   description = "Password used to access a password protected server. Can be specified only if `transit_encryption_enabled = true`"
   type        = string
   default     = null
+}
+
+variable "at_rest_encryption_enabled" {
+  description = "Whether to enable encryption at rest"
+  type        = string
+  default     = true
 }
 
 variable "kms_key_id" {

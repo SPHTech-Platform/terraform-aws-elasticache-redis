@@ -57,16 +57,16 @@ resource "aws_elasticache_replication_group" "this" {
   security_group_ids   = var.security_groups
 
   multi_az_enabled           = var.replication_enabled ? true : false
-  at_rest_encryption_enabled = true
-  transit_encryption_enabled = true
+  at_rest_encryption_enabled = var.at_rest_encryption_enabled
+  transit_encryption_enabled = var.transit_encryption_enabled
   automatic_failover_enabled = var.replication_enabled ? true : false
 
   notification_topic_arn = var.notification_topic_arn
 
   apply_immediately = var.apply_immediately
 
-  auth_token = var.auth_token
-  kms_key_id = var.kms_key_id
+  auth_token = var.transit_encryption_enabled ? var.auth_token : null
+  kms_key_id = var.at_rest_encryption_enabled ? var.kms_key_id : null
 
   num_node_groups         = var.cluster_mode_enabled ? var.num_node_groups : null
   replicas_per_node_group = var.cluster_mode_enabled ? var.replicas_per_node_group : null
