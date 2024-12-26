@@ -11,8 +11,8 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.5.0 |
-| <a name="provider_awscc"></a> [awscc](#provider\_awscc) | 0.67.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.82.0 |
+| <a name="provider_awscc"></a> [awscc](#provider\_awscc) | 1.24.0 |
 
 ## Modules
 
@@ -61,20 +61,23 @@ No modules.
 | <a name="input_num_node_groups"></a> [num\_node\_groups](#input\_num\_node\_groups) | Number of node groups (shards) for this Redis replication group. Changing this number will trigger an online resizing operation before other settings modifications. Required unless `global_replication_group_id` is set | `number` | `2` | no |
 | <a name="input_ok_actions"></a> [ok\_actions](#input\_ok\_actions) | The list of actions to execute when this alarm transitions into an OK state from any other state. | `list(string)` | `[]` | no |
 | <a name="input_parameter_group_name"></a> [parameter\_group\_name](#input\_parameter\_group\_name) | Existing Parameter Group name | `string` | `""` | no |
-| <a name="input_parameters"></a> [parameters](#input\_parameters) | A list of Redis parameters to apply. Note that parameters may differ from one Redis family to another | <pre>list(object({<br>    name  = string<br>    value = string<br>  }))</pre> | `[]` | no |
+| <a name="input_parameters"></a> [parameters](#input\_parameters) | A list of Redis parameters to apply. Note that parameters may differ from one Redis family to another | <pre>list(object({<br/>    name  = string<br/>    value = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_port"></a> [port](#input\_port) | Redis port | `number` | `6379` | no |
-| <a name="input_preferred_cache_cluster_azs"></a> [preferred\_cache\_cluster\_azs](#input\_preferred\_cache\_cluster\_azs) | List of EC2 availability zones in which the replication group's cache clusters will be created. The order of the availability zones in the list is considered. The first item in the list will be the primary node. Ignored when updating | `list(string)` | <pre>[<br>  "ap-southeast-1a",<br>  "ap-southeast-1b"<br>]</pre> | no |
+| <a name="input_preferred_cache_cluster_azs"></a> [preferred\_cache\_cluster\_azs](#input\_preferred\_cache\_cluster\_azs) | List of EC2 availability zones in which the replication group's cache clusters will be created. The order of the availability zones in the list is considered. The first item in the list will be the primary node. Ignored when updating | `list(string)` | <pre>[<br/>  "ap-southeast-1a",<br/>  "ap-southeast-1b"<br/>]</pre> | no |
 | <a name="input_replicas_per_node_group"></a> [replicas\_per\_node\_group](#input\_replicas\_per\_node\_group) | Number of replica nodes in each node group. Valid values are 0 to 5. Changing this number will trigger an online resizing operation before other settings modifications. | `number` | `1` | no |
 | <a name="input_replication_enabled"></a> [replication\_enabled](#input\_replication\_enabled) | Set to false to diable replication in redis cluster | `bool` | `false` | no |
 | <a name="input_replication_group_id"></a> [replication\_group\_id](#input\_replication\_group\_id) | ElastiCache replication\_group\_id | `string` | `""` | no |
 | <a name="input_security_groups"></a> [security\_groups](#input\_security\_groups) | List of  Security Group IDs to place the cluster into | `list(string)` | `[]` | no |
-| <a name="input_serverless_user_group_id"></a> [serverless\_user\_group\_id](#input\_serverless\_user\_group\_id) | The ID of the user group for Serverless Cache | `string` | `""` | no |
+| <a name="input_snapshot_arns"></a> [snapshot\_arns](#input\_snapshot\_arns) | The ARN of the snapshot from which to restore data into the new node group (shard) | `list(string)` | `[]` | no |
 | <a name="input_snapshot_arns_to_restore"></a> [snapshot\_arns\_to\_restore](#input\_snapshot\_arns\_to\_restore) | The ARN's of snapshot to restore Serverless Cache | `list(string)` | `[]` | no |
+| <a name="input_snapshot_name"></a> [snapshot\_name](#input\_snapshot\_name) | The name of the snapshot from which to restore data into the new node group (shard) | `string` | `""` | no |
 | <a name="input_snapshot_retention_limit"></a> [snapshot\_retention\_limit](#input\_snapshot\_retention\_limit) | Number of days for which ElastiCache will retain automatic cache cluster snapshots before deleting them. For example, if you set SnapshotRetentionLimit to 5, then a snapshot that was taken today will be retained for 5 days before being deleted. If the value of snapshot\_retention\_limit is set to zero (0), backups are turned off. Please note that setting a snapshot\_retention\_limit is not supported on cache.t1.micro cache nodes | `number` | `5` | no |
+| <a name="input_snapshot_window"></a> [snapshot\_window](#input\_snapshot\_window) | The daily time range (in UTC) during which ElastiCache begins taking a daily snapshot of the node group (shard) specified by SnapshottingClusterId | `string` | `"00:00-01:00"` | no |
 | <a name="input_subnet_group_name"></a> [subnet\_group\_name](#input\_subnet\_group\_name) | Subnet group name for the ElastiCache instance | `string` | `""` | no |
 | <a name="input_subnets"></a> [subnets](#input\_subnets) | AWS subnet ids | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (\_e.g.\_ map("BusinessUnit","ABC") | `map(string)` | `{}` | no |
 | <a name="input_use_serverless"></a> [use\_serverless](#input\_use\_serverless) | Use serverless ElastiCache service | `bool` | `false` | no |
+| <a name="input_user_group_id"></a> [user\_group\_id](#input\_user\_group\_id) | The ID of the user group Elasticache | `string` | `""` | no |
 
 ## Outputs
 
