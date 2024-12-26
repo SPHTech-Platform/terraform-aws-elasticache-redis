@@ -15,7 +15,7 @@ locals {
 }
 
 resource "aws_elasticache_parameter_group" "this" {
-  count = var.enabled && var.parameter_group_name == "" || var.parameter_group_name == null ? 1 : 0
+  count = var.enabled && var.parameter_group_name == "" && !var.use_serverless || var.parameter_group_name == null ? 1 : 0
 
   name   = var.name
   family = var.elasticache_parameter_group_family
@@ -38,7 +38,7 @@ resource "aws_elasticache_subnet_group" "this" {
 }
 
 resource "aws_elasticache_replication_group" "this" {
-  count = var.enabled ? 1 : 0
+  count = var.enabled && !var.use_serverless ? 1 : 0
 
   replication_group_id = var.replication_group_id == "" ? local.cluster_id : var.replication_group_id
   description          = "Redis Cluster Rep"
@@ -71,5 +71,44 @@ resource "aws_elasticache_replication_group" "this" {
   num_node_groups         = var.cluster_mode_enabled ? var.num_node_groups : null
   replicas_per_node_group = var.cluster_mode_enabled ? var.replicas_per_node_group : null
 
+  user_group_ids = [var.user_group_id]
+
   tags = var.tags
+}
+
+resource "awscc_elasticache_serverless_cache" "this" {
+  count = var.enabled && var.use_serverless ? 1 : 0
+
+  serverless_cache_name = var.name
+  description           = "${var.name} ElastiCache Redis Serverless"
+  engine                = "redis"
+  major_engine_version  = var.engine_version
+
+  cache_usage_limits = {
+    data_storage = {
+      maximum = var.max_data_storage
+      unit    = "GB"
+    }
+    ecpu_per_second = {
+      maximum = var.max_ecpu_per_second
+    }
+  }
+
+  user_group_id = var.user_group_id
+
+  final_snapshot_name = "${var.name}-elasticache-serverless-final-snapshot"
+  kms_key_id          = var.kms_key_id
+  security_group_ids  = var.security_groups
+  subnet_ids          = var.subnets
+
+  daily_snapshot_time      = var.daily_snapshot_time
+  snapshot_arns_to_restore = var.snapshot_arns_to_restore
+  snapshot_retention_limit = var.snapshot_retention_limit
+
+  tags = [
+    for key, value in var.tags : {
+      key   = key
+      value = value
+    }
+  ]
 }

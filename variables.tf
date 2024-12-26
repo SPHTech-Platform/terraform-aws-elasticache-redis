@@ -64,10 +64,22 @@ variable "alarm_cpu_threshold_percent" {
   default     = 75
 }
 
+variable "alarm_ecpu_threshold_percent" {
+  description = "ECPU threshold alarm level for elasticache serverless"
+  type        = number
+  default     = 75
+}
+
 variable "alarm_memory_threshold_bytes" {
   description = "Alarm memory threshold bytes"
   type        = number
   default     = 10000000 # 10MB
+}
+
+variable "alarm_data_threshold_percent" {
+  description = "Data threshold alarm level for elasticache serverless"
+  type        = number
+  default     = 75
 }
 
 variable "notification_topic_arn" {
@@ -155,7 +167,7 @@ variable "preferred_cache_cluster_azs" {
 }
 
 variable "parameter_group_name" {
-  description = "Excisting Parameter Group name"
+  description = "Existing Parameter Group name"
   type        = string
   default     = ""
 }
@@ -200,4 +212,51 @@ variable "replicas_per_node_group" {
   description = "Number of replica nodes in each node group. Valid values are 0 to 5. Changing this number will trigger an online resizing operation before other settings modifications."
   type        = number
   default     = 1
+}
+
+# ElastiCache Serverless
+variable "use_serverless" {
+  description = "Use serverless ElastiCache service"
+  type        = bool
+  default     = false
+}
+
+variable "max_data_storage" {
+  type        = number
+  description = "The maximun cached data capacity of the Serverless Cache in GB"
+  default     = 10
+
+  validation {
+    condition     = var.max_data_storage >= 1 && var.max_data_storage <= 5000
+    error_message = "The max_data_storage in GB value must be between 1 and 5,000."
+  }
+}
+
+variable "max_ecpu_per_second" {
+  type        = number
+  description = "The maximum ECPU per second of the Serverless Cache"
+  default     = 1000
+
+  validation {
+    condition     = var.max_ecpu_per_second >= 1000 && var.max_ecpu_per_second <= 15000000
+    error_message = "The max_ecpu_per_second value must be between 1,000 and 15,000,000."
+  }
+}
+
+variable "daily_snapshot_time" {
+  type        = string
+  description = "The daily time range (in UTC) during which the service takes automatic snapshot of the Serverless Cache"
+  default     = "18:00"
+}
+
+variable "snapshot_arns_to_restore" {
+  type        = list(string)
+  description = "The ARN's of snapshot to restore Serverless Cache"
+  default     = []
+}
+
+variable "user_group_id" {
+  type        = string
+  description = "The ID of the user group Elasticache"
+  default     = ""
 }
