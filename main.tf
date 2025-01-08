@@ -41,7 +41,7 @@ resource "aws_elasticache_replication_group" "this" {
   count = var.enabled ? 1 : 0
 
   replication_group_id = var.replication_group_id == "" ? local.cluster_id : var.replication_group_id
-  description          ="${var.engine} Cluster Rep"
+  description          = "${var.engine} Cluster Rep"
 
   engine         = var.engine
   engine_version = var.engine_version
