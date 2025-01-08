@@ -15,7 +15,7 @@ locals {
 }
 
 resource "aws_elasticache_parameter_group" "this" {
-  count = var.enabled && var.parameter_group_name == "" && var.engine == "redis" || var.parameter_group_name == null ? 1 : 0
+  count = var.enabled && var.parameter_group_name == "" || var.parameter_group_name == null ? 1 : 0
 
   name   = var.name
   family = var.elasticache_parameter_group_family
@@ -41,7 +41,7 @@ resource "aws_elasticache_replication_group" "this" {
   count = var.enabled ? 1 : 0
 
   replication_group_id = var.replication_group_id == "" ? local.cluster_id : var.replication_group_id
-  description          = "${var.engine} Cluster Rep"
+  description          ="${var.engine} Cluster Rep"
 
   engine         = var.engine
   engine_version = var.engine_version
