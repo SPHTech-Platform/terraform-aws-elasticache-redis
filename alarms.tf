@@ -2,7 +2,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
   count = var.enabled ? local.num_nodes : 0
 
   alarm_name        = "${tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]}-cpu-utilization"
-  alarm_description = "Redis cluster CPU utilization"
+  alarm_description = "${var.engine} cluster CPU utilization"
 
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
@@ -33,7 +33,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
   count = var.enabled ? local.num_nodes : 0
 
   alarm_name        = "${tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]}-freeable-memory"
-  alarm_description = "Redis cluster freeable memory"
+  alarm_description = "${var.engine} cluster freeable memory"
 
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = 1
