@@ -1,5 +1,5 @@
 output "endpoint" {
-  description = "${var.engine} primary or configuration endpoint, whichever is appropriate for the given cluster mode"
+  description = "primary or configuration endpoint, whichever is appropriate for the given cluster mode"
   value       = try(aws_elasticache_replication_group.this[0].primary_endpoint_address, null)
 }
 
@@ -9,7 +9,7 @@ output "reader_endpoint_address" {
 }
 
 output "member_clusters" {
-  description = "${var.engine} cluster members"
+  description = "cluster members"
   value       = try(aws_elasticache_replication_group.this[0].member_clusters, null)
 }
 
