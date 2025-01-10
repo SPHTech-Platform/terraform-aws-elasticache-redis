@@ -52,8 +52,15 @@ variable "instance_type" {
   default     = "cache.t2.micro"
 }
 
+variable "engine" {
+  description = "Engine of the elasticache (valkey or redis)"
+  type        = string
+  default     = "redis"
+}
+
+
 variable "engine_version" {
-  description = "Redis engine version. https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/supported-engine-versions.html"
+  description = "Engine version. https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/supported-engine-versions.html"
   type        = string
   default     = "7.0"
 }

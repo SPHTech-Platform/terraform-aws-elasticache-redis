@@ -4,13 +4,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.73.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.5.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.82.2 |
 
 ## Modules
 
@@ -41,7 +41,8 @@ No modules.
 | <a name="input_create_elasticache_subnet_group"></a> [create\_elasticache\_subnet\_group](#input\_create\_elasticache\_subnet\_group) | Create Elasticache Subnet Group | `bool` | `true` | no |
 | <a name="input_elasticache_parameter_group_family"></a> [elasticache\_parameter\_group\_family](#input\_elasticache\_parameter\_group\_family) | ElastiCache parameter group family | `string` | `"redis7"` | no |
 | <a name="input_enabled"></a> [enabled](#input\_enabled) | Set to false to prevent the module from creating any resources | `bool` | `true` | no |
-| <a name="input_engine_version"></a> [engine\_version](#input\_engine\_version) | Redis engine version. https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/supported-engine-versions.html | `string` | `"redis7.0"` | no |
+| <a name="input_engine"></a> [engine](#input\_engine) | Engine of the elasticache (valkey or redis) | `string` | `"redis"` | no |
+| <a name="input_engine_version"></a> [engine\_version](#input\_engine\_version) | Engine version. https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/supported-engine-versions.html | `string` | `"7.0"` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | Elastic cache instance type | `string` | `"cache.t2.micro"` | no |
 | <a name="input_kms_key_id"></a> [kms\_key\_id](#input\_kms\_key\_id) | The ARN of the key that you wish to use if encrypting at rest. If not supplied, uses service managed encryption. Can be specified only if `at_rest_encryption_enabled = true` | `string` | `null` | no |
 | <a name="input_maintenance_window"></a> [maintenance\_window](#input\_maintenance\_window) | Maintenance window | `string` | `"wed:03:00-wed:04:00"` | no |
@@ -69,10 +70,10 @@ No modules.
 | <a name="output_arn"></a> [arn](#output\_arn) | Elasticache Replication Group ARN |
 | <a name="output_cluster_enabled"></a> [cluster\_enabled](#output\_cluster\_enabled) | Indicates if cluster mode is enabled. |
 | <a name="output_configuration_endpoint_address"></a> [configuration\_endpoint\_address](#output\_configuration\_endpoint\_address) | Address of the replication group configuration endpoint when cluster mode is enabled. |
-| <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | Redis primary or configuration endpoint, whichever is appropriate for the given cluster mode |
+| <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | primary or configuration endpoint, whichever is appropriate for the given cluster mode |
 | <a name="output_engine_version_actual"></a> [engine\_version\_actual](#output\_engine\_version\_actual) | Because ElastiCache pulls the latest minor or patch for a version, this attribute returns the running version of the cache engine. |
 | <a name="output_id"></a> [id](#output\_id) | ID of the ElastiCache Replication Group. |
-| <a name="output_member_clusters"></a> [member\_clusters](#output\_member\_clusters) | Redis cluster members |
+| <a name="output_member_clusters"></a> [member\_clusters](#output\_member\_clusters) | cluster members |
 | <a name="output_parameter_group_arn"></a> [parameter\_group\_arn](#output\_parameter\_group\_arn) | The AWS ARN associated with the parameter group. |
 | <a name="output_parameter_group_id"></a> [parameter\_group\_id](#output\_parameter\_group\_id) | The ElastiCache parameter group name. |
 | <a name="output_reader_endpoint_address"></a> [reader\_endpoint\_address](#output\_reader\_endpoint\_address) | The address of the endpoint for the reader node in the replication group, if the cluster mode is disabled |
