@@ -52,8 +52,15 @@ variable "instance_type" {
   default     = "cache.t2.micro"
 }
 
+variable "engine" {
+  description = "Engine of the elasticache (valkey or redis)"
+  type        = string
+  default     = "redis"
+}
+
+
 variable "engine_version" {
-  description = "Redis engine version. https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/supported-engine-versions.html"
+  description = "Engine version. https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/supported-engine-versions.html"
   type        = string
   default     = "7.0"
 }
@@ -212,6 +219,12 @@ variable "replicas_per_node_group" {
   description = "Number of replica nodes in each node group. Valid values are 0 to 5. Changing this number will trigger an online resizing operation before other settings modifications."
   type        = number
   default     = 1
+}
+
+variable "transit_encryption_enabled" {
+  description = "Whether to enable in transit encryption"
+  type        = bool
+  default     = true
 }
 
 # ElastiCache Serverless

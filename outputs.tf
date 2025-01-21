@@ -9,7 +9,7 @@ output "reader_endpoint_address" {
 }
 
 output "member_clusters" {
-  description = "Redis cluster members"
+  description = "cluster members"
   value       = try(aws_elasticache_replication_group.this[0].member_clusters, null)
 }
 
