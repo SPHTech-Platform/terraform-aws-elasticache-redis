@@ -71,10 +71,22 @@ variable "alarm_cpu_threshold_percent" {
   default     = 75
 }
 
+variable "alarm_ecpu_threshold_percent" {
+  description = "ECPU threshold alarm level for elasticache serverless"
+  type        = number
+  default     = 75
+}
+
 variable "alarm_memory_threshold_bytes" {
   description = "Alarm memory threshold bytes"
   type        = number
   default     = 10000000 # 10MB
+}
+
+variable "alarm_data_threshold_percent" {
+  description = "Data threshold alarm level for elasticache serverless"
+  type        = number
+  default     = 75
 }
 
 variable "notification_topic_arn" {
@@ -162,7 +174,7 @@ variable "preferred_cache_cluster_azs" {
 }
 
 variable "parameter_group_name" {
-  description = "Excisting Parameter Group name"
+  description = "Existing Parameter Group name"
   type        = string
   default     = ""
 }
@@ -177,6 +189,12 @@ variable "auth_token" {
   description = "Password used to access a password protected server. Can be specified only if `transit_encryption_enabled = true`"
   type        = string
   default     = null
+}
+
+variable "at_rest_encryption_enabled" {
+  description = "Whether to enable encryption at rest"
+  type        = string
+  default     = true
 }
 
 variable "kms_key_id" {
@@ -201,4 +219,69 @@ variable "transit_encryption_enabled" {
   description = "Whether to enable in transit encryption"
   type        = bool
   default     = true
+}
+
+# ElastiCache Serverless
+variable "use_serverless" {
+  description = "Use serverless ElastiCache service"
+  type        = bool
+  default     = false
+}
+
+variable "max_data_storage" {
+  type        = number
+  description = "The maximun cached data capacity of the Serverless Cache in GB"
+  default     = 10
+
+  validation {
+    condition     = var.max_data_storage >= 1 && var.max_data_storage <= 5000
+    error_message = "The max_data_storage in GB value must be between 1 and 5,000."
+  }
+}
+
+variable "max_ecpu_per_second" {
+  type        = number
+  description = "The maximum ECPU per second of the Serverless Cache"
+  default     = 1000
+
+  validation {
+    condition     = var.max_ecpu_per_second >= 1000 && var.max_ecpu_per_second <= 15000000
+    error_message = "The max_ecpu_per_second value must be between 1,000 and 15,000,000."
+  }
+}
+
+variable "daily_snapshot_time" {
+  type        = string
+  description = "The daily time range (in UTC) during which the service takes automatic snapshot of the Serverless Cache"
+  default     = "18:00"
+}
+
+variable "snapshot_arns_to_restore" {
+  type        = list(string)
+  description = "The ARN's of snapshot to restore Serverless Cache"
+  default     = []
+}
+
+variable "user_group_id" {
+  type        = string
+  description = "The ID of the user group Elasticache"
+  default     = ""
+}
+
+variable "snapshot_window" {
+  type        = string
+  description = "The daily time range (in UTC) during which ElastiCache begins taking a daily snapshot of the node group (shard) specified by SnapshottingClusterId"
+  default     = "00:00-01:00"
+}
+
+variable "snapshot_arns" {
+  type        = list(string)
+  description = "The ARN of the snapshot from which to restore data into the new node group (shard)"
+  default     = []
+}
+
+variable "snapshot_name" {
+  type        = string
+  description = "The name of the snapshot from which to restore data into the new node group (shard)"
+  default     = ""
 }
