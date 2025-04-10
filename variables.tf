@@ -184,6 +184,12 @@ variable "transit_encryption_enabled" {
   default     = true
 }
 
+variable "transit_encryption_mode" {
+  description = "Accepted values are preferred and required. Can be specified only if `transit_encryption_enabled = true`"
+  type        = string
+  default     = null
+}
+
 variable "auth_token" {
   description = "Password used to access a password protected server. Can be specified only if `transit_encryption_enabled = true`"
   type        = string
