@@ -227,12 +227,6 @@ variable "replicas_per_node_group" {
   default     = 1
 }
 
-variable "transit_encryption_enabled" {
-  description = "Whether to enable in transit encryption"
-  type        = bool
-  default     = true
-}
-
 # ElastiCache Serverless
 variable "use_serverless" {
   description = "Use serverless ElastiCache service"
