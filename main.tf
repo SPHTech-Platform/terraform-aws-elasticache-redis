@@ -60,6 +60,7 @@ resource "aws_elasticache_replication_group" "this" {
 
   at_rest_encryption_enabled = var.at_rest_encryption_enabled
   transit_encryption_enabled = var.transit_encryption_enabled
+  transit_encryption_mode    = var.transit_encryption_mode
   automatic_failover_enabled = var.replication_enabled ? true : false
 
   notification_topic_arn = var.notification_topic_arn
@@ -72,7 +73,7 @@ resource "aws_elasticache_replication_group" "this" {
   num_node_groups         = var.cluster_mode_enabled ? var.num_node_groups : null
   replicas_per_node_group = var.cluster_mode_enabled ? var.replicas_per_node_group : null
 
-  user_group_ids = [var.user_group_id]
+  user_group_ids = length(var.user_group_id) != 0 ? [var.user_group_id] : null
 
   snapshot_retention_limit = var.instance_type != "cache.t1.micro" ? var.snapshot_retention_limit : 0
   snapshot_window          = var.snapshot_window
