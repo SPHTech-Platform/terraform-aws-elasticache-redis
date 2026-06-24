@@ -14,3 +14,48 @@ jobs:
     uses: SPHTech-Platform/reusable-workflows/.github/workflows/terraform.yaml@main
     with:
       upload_sarif: false
+
+  test:
+    name: Terraform test
+    runs-on:
+      - platform-eng-ent-v2-dual
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform init
+        id: init
+        run: terraform init -backend=false
+
+      - name: Terraform Test
+        id: test
+        # Tests use mock_provider, so no AWS credentials are required.
+        run: terraform test -no-color
+
+      - name: Find Comment
+        uses: peter-evans/find-comment@v3
+        if: always() && github.event_name == 'pull_request'
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Terraform Tests
+
+      - name: Comment Test result
+        id: comment
+        uses: peter-evans/create-or-update-comment@v4
+        if: always() && github.event_name == 'pull_request'
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            #### Terraform Tests 📖 `${{ steps.test.outcome }}`
+            ```
+            ${{ steps.test.outputs.stdout || steps.test.outputs.stderr }}
+            ```
+          edit-mode: replace
