@@ -39,3 +39,46 @@ module "redis" {
     description = "redis-test-cluster-module"
   }
 }
+
+module "valkey" {
+  source = "../"
+
+  enabled                         = true
+  cluster_mode_enabled            = false
+  create_elasticache_subnet_group = false
+  replication_enabled             = true
+
+  subnets = local.db_subnets
+
+  name = "valkey-test-cluster-module"
+  port = 6379
+
+  engine          = "valkey"
+  instance_type   = "cache.t4g.small"
+  engine_version  = "7.2"
+  security_groups = ["sg-0123456789"]
+
+  subnet_group_name                  = "default"
+  elasticache_parameter_group_family = "valkey7"
+
+  parameter_group_name = "just_a_group_name"
+
+  cluster_size = 1
+
+  auto_minor_version_upgrade = true
+
+  log_delivery_configuration = [
+    {
+      destination      = "valkey-slow-log"
+      destination_type = "cloudwatch-logs"
+      log_format       = "json"
+      log_type         = "slow-log"
+    }
+  ]
+
+  apply_immediately = true
+
+  tags = {
+    description = "valkey-test-cluster-module"
+  }
+}
