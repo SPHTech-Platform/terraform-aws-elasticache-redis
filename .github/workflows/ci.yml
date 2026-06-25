@@ -11,14 +11,15 @@ permissions:
   pull-requests: write
 jobs:
   ci:
-    uses: SPHTech-Platform/reusable-workflows/.github/workflows/terraform.yaml@main
+    uses: SPHTech-Platform/platform-reusable-workflow/.github/workflows/terraform.yaml@main
     with:
       upload_sarif: false
+    secrets: inherit
 
   test:
     name: Terraform test
-    runs-on:
-      - platform-eng-ent-v2-dual
+    # Tests use mock_provider (no AWS), so a GitHub-hosted runner is sufficient.
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
