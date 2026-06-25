@@ -151,6 +151,11 @@ variable "auth_token_update_strategy" {
   description = "Strategy to use when updating the auth_token. Valid values are 'SET', 'ROTATE', and 'DELETE'. Leave null to use the provider default."
   type        = string
   default     = null
+
+  validation {
+    condition     = var.auth_token_update_strategy == null || contains(["SET", "ROTATE", "DELETE"], var.auth_token_update_strategy)
+    error_message = "auth_token_update_strategy must be one of 'SET', 'ROTATE', or 'DELETE'."
+  }
 }
 
 variable "data_tiering_enabled" {
@@ -168,6 +173,21 @@ variable "log_delivery_configuration" {
     log_type         = string # "slow-log" or "engine-log"
   }))
   default = []
+
+  validation {
+    condition     = alltrue([for c in var.log_delivery_configuration : contains(["cloudwatch-logs", "kinesis-firehose"], c.destination_type)])
+    error_message = "log_delivery_configuration destination_type must be 'cloudwatch-logs' or 'kinesis-firehose'."
+  }
+
+  validation {
+    condition     = alltrue([for c in var.log_delivery_configuration : contains(["text", "json"], c.log_format)])
+    error_message = "log_delivery_configuration log_format must be 'text' or 'json'."
+  }
+
+  validation {
+    condition     = alltrue([for c in var.log_delivery_configuration : contains(["slow-log", "engine-log"], c.log_type)])
+    error_message = "log_delivery_configuration log_type must be 'slow-log' or 'engine-log'."
+  }
 }
 
 variable "replication_group_id" {
