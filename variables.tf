@@ -22,6 +22,17 @@ variable "name" {
   default     = "value"
 }
 
+variable "engine" {
+  description = "Cache engine to use. Valid values are 'redis' and 'valkey'."
+  type        = string
+  default     = "redis"
+
+  validation {
+    condition     = contains(["redis", "valkey"], var.engine)
+    error_message = "engine must be either 'redis' or 'valkey'."
+  }
+}
+
 variable "tags" {
   description = "Additional tags (_e.g._ map(\"BusinessUnit\",\"ABC\")"
   type        = map(string)
@@ -125,9 +136,58 @@ variable "subnet_group_name" {
 }
 
 variable "elasticache_parameter_group_family" {
-  description = "ElastiCache parameter group family"
+  description = "ElastiCache parameter group family. For redis use e.g. 'redis7'; for valkey use 'valkey7' or 'valkey8'."
   type        = string
   default     = "redis7"
+}
+
+variable "auto_minor_version_upgrade" {
+  description = "Whether minor engine upgrades are applied automatically during the maintenance window. Supported on Redis/Valkey 6+."
+  type        = bool
+  default     = null
+}
+
+variable "auth_token_update_strategy" {
+  description = "Strategy to use when updating the auth_token. Valid values are 'SET', 'ROTATE', and 'DELETE'. Leave null to use the provider default."
+  type        = string
+  default     = null
+
+  validation {
+    condition     = var.auth_token_update_strategy == null || contains(["SET", "ROTATE", "DELETE"], var.auth_token_update_strategy)
+    error_message = "auth_token_update_strategy must be one of 'SET', 'ROTATE', or 'DELETE'."
+  }
+}
+
+variable "data_tiering_enabled" {
+  description = "Whether data tiering is enabled. Requires a r6gd node type."
+  type        = bool
+  default     = null
+}
+
+variable "log_delivery_configuration" {
+  description = "List of log delivery configurations for the replication group (slow-log and/or engine-log)."
+  type = list(object({
+    destination      = string # CloudWatch log group name or Kinesis Firehose stream name
+    destination_type = string # "cloudwatch-logs" or "kinesis-firehose"
+    log_format       = string # "text" or "json"
+    log_type         = string # "slow-log" or "engine-log"
+  }))
+  default = []
+
+  validation {
+    condition     = alltrue([for c in var.log_delivery_configuration : contains(["cloudwatch-logs", "kinesis-firehose"], c.destination_type)])
+    error_message = "log_delivery_configuration destination_type must be 'cloudwatch-logs' or 'kinesis-firehose'."
+  }
+
+  validation {
+    condition     = alltrue([for c in var.log_delivery_configuration : contains(["text", "json"], c.log_format)])
+    error_message = "log_delivery_configuration log_format must be 'text' or 'json'."
+  }
+
+  validation {
+    condition     = alltrue([for c in var.log_delivery_configuration : contains(["slow-log", "engine-log"], c.log_type)])
+    error_message = "log_delivery_configuration log_type must be 'slow-log' or 'engine-log'."
+  }
 }
 
 variable "replication_group_id" {
