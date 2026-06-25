@@ -1,4 +1,12 @@
-mock_provider "aws" {}
+mock_provider "aws" {
+  # member_clusters is consumed by the CloudWatch alarms; OpenTofu's mock
+  # otherwise returns an empty set, breaking the alarm count.index lookup.
+  mock_resource "aws_elasticache_replication_group" {
+    defaults = {
+      member_clusters = ["mock-node-001"]
+    }
+  }
+}
 
 variables {
   name            = "validation-test"
