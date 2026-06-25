@@ -15,7 +15,9 @@ jobs:
     with:
       upload_sarif: false
       runner_label: platform-eng-ent-v2-dual
-    secrets: inherit
+    secrets:
+      TFE_TOKEN: ${{ secrets.TFE_TOKEN }}
+      SCALR_TOKEN: ${{ secrets.SCALR_TOKEN }}
 
   test:
     name: OpenTofu test
