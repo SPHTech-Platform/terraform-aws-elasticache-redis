@@ -126,6 +126,7 @@ variable "alarm_evictions_threshold" {
 variable "alarm_curr_connections_threshold" {
   description = "CurrConnections alarm threshold. Leave null to disable; the right value depends on the node type."
   type        = number
+  nullable    = true
   default     = null
 }
 
