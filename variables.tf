@@ -111,6 +111,30 @@ variable "ok_actions" {
   default     = []
 }
 
+variable "alarm_engine_cpu_threshold_percent" {
+  description = "EngineCPUUtilization alarm threshold percent."
+  type        = number
+  default     = 80
+}
+
+variable "alarm_evictions_threshold" {
+  description = "Evictions alarm threshold. Set to 0 to alert on any eviction."
+  type        = number
+  default     = 0
+}
+
+variable "alarm_curr_connections_threshold" {
+  description = "CurrConnections alarm threshold. Leave null to disable; the right value depends on the node type."
+  type        = number
+  default     = null
+}
+
+variable "alarm_replication_lag_threshold_seconds" {
+  description = "ReplicationLag alarm threshold in seconds."
+  type        = number
+  default     = 5
+}
+
 variable "apply_immediately" {
   description = "Specifies whether any database modifications are applied immediately, or during the next maintenance window"
   type        = bool
