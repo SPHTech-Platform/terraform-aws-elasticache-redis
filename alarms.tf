@@ -182,8 +182,6 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_ecpu" {
 
   alarm_actions = var.alarm_actions
   ok_actions    = var.ok_actions
-
-  depends_on = [aws_elasticache_serverless_cache.this]
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_serverless_data" {
@@ -207,8 +205,6 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_data" {
 
   alarm_actions = var.alarm_actions
   ok_actions    = var.ok_actions
-
-  depends_on = [aws_elasticache_replication_group.this]
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_serverless_throttled_commands" {
@@ -232,6 +228,4 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_throttled_commands" {
 
   alarm_actions = var.alarm_actions
   ok_actions    = var.ok_actions
-
-  depends_on = [aws_elasticache_serverless_cache.this]
 }
