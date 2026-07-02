@@ -1,6 +1,6 @@
 locals {
-  member_clusters       = var.enabled && !var.use_serverless ? toset(aws_elasticache_replication_group.this[0].member_clusters) : toset([])
-  serverless_cache_name = var.enabled && var.use_serverless ? aws_elasticache_serverless_cache.this[0].name : ""
+  cluster_ids     = var.enabled && !var.use_serverless ? toset(aws_elasticache_replication_group.this[0].member_clusters) : toset([])
+  serverless_name = var.enabled && var.use_serverless ? aws_elasticache_serverless_cache.this[0].name : ""
 
   # Shared alarm defaults — change here to apply consistently across all non-serverless alarms
   alarm_namespace           = "AWS/ElastiCache"
@@ -10,33 +10,9 @@ locals {
   alarm_datapoints_to_alarm = 5
 }
 
-resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
-  for_each = local.member_clusters
-
-  alarm_name          = "${each.key}-cpu-utilization"
-  alarm_description   = "Redis host CPU utilization"
-  comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = local.alarm_evaluation_periods
-  datapoints_to_alarm = local.alarm_datapoints_to_alarm
-  threshold           = var.alarm_cpu_threshold_percent
-  namespace           = local.alarm_namespace
-  metric_name         = "CPUUtilization"
-  period              = local.alarm_period
-  statistic           = "Average"
-  treat_missing_data  = local.alarm_treat_missing_data
-
-  tags = var.tags
-
-  dimensions = {
-    CacheClusterId = each.key
-  }
-
-  alarm_actions = var.alarm_actions
-  ok_actions    = var.ok_actions
-}
 
 resource "aws_cloudwatch_metric_alarm" "cache_engine_cpu" {
-  for_each = local.member_clusters
+  for_each = local.cluster_ids
 
   alarm_name          = "${each.key}-engine-cpu-utilization"
   alarm_description   = "Redis engine CPU utilization"
@@ -61,7 +37,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_engine_cpu" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_memory" {
-  for_each = local.member_clusters
+  for_each = local.cluster_ids
 
   alarm_name          = "${each.key}-freeable-memory"
   alarm_description   = "Redis host freeable memory drops below threshold"
@@ -86,7 +62,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_evictions" {
-  for_each = local.member_clusters
+  for_each = local.cluster_ids
 
   alarm_name          = "${each.key}-evictions"
   alarm_description   = "Redis evictions due to maxmemory limit"
@@ -111,7 +87,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_evictions" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_curr_connections" {
-  for_each = var.alarm_curr_connections_threshold != null ? local.member_clusters : toset([])
+  for_each = var.alarm_curr_connections_threshold != null ? local.cluster_ids : toset([])
 
   alarm_name          = "${each.key}-curr-connections"
   alarm_description   = "Redis client connections"
@@ -136,7 +112,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_curr_connections" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_replication_lag" {
-  for_each = local.member_clusters
+  for_each = var.replication_enabled ? local.cluster_ids : toset([])
 
   alarm_name          = "${each.key}-replication-lag"
   alarm_description   = "Redis replication lag"
@@ -164,7 +140,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_replication_lag" {
 resource "aws_cloudwatch_metric_alarm" "cache_serverless_ecpu" {
   count = var.enabled && var.use_serverless ? 1 : 0
 
-  alarm_name          = "${local.serverless_cache_name}-ecpu-utilization"
+  alarm_name          = "${local.serverless_name}-ecpu-utilization"
   alarm_description   = "Redis serverless ECPU utilization"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
@@ -177,7 +153,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_ecpu" {
   tags = var.tags
 
   dimensions = {
-    CacheClusterId = local.serverless_cache_name
+    CacheClusterId = local.serverless_name
   }
 
   alarm_actions = var.alarm_actions
@@ -187,7 +163,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_ecpu" {
 resource "aws_cloudwatch_metric_alarm" "cache_serverless_data" {
   count = var.enabled && var.use_serverless ? 1 : 0
 
-  alarm_name          = "${local.serverless_cache_name}-data-storage"
+  alarm_name          = "${local.serverless_name}-data-storage"
   alarm_description   = "Redis serverless data storage"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
@@ -200,7 +176,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_data" {
   tags = var.tags
 
   dimensions = {
-    CacheClusterId = local.serverless_cache_name
+    CacheClusterId = local.serverless_name
   }
 
   alarm_actions = var.alarm_actions
@@ -210,7 +186,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_data" {
 resource "aws_cloudwatch_metric_alarm" "cache_serverless_throttled_commands" {
   count = var.enabled && var.use_serverless ? 1 : 0
 
-  alarm_name          = "${local.serverless_cache_name}-throttled-commands"
+  alarm_name          = "${local.serverless_name}-throttled-commands"
   alarm_description   = "Redis serverless throttled commands"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
@@ -223,7 +199,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_throttled_commands" {
   tags = var.tags
 
   dimensions = {
-    CacheClusterId = local.serverless_cache_name
+    CacheClusterId = local.serverless_name
   }
 
   alarm_actions = var.alarm_actions
