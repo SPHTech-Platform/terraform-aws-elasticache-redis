@@ -1,175 +1,175 @@
-resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
-  count = var.enabled && !var.use_serverless ? local.num_nodes : 0
+locals {
+  member_clusters       = var.enabled && !var.use_serverless ? toset(aws_elasticache_replication_group.this[0].member_clusters) : toset([])
+  serverless_cache_name = var.enabled && var.use_serverless ? aws_elasticache_serverless_cache.this[0].name : ""
 
-  alarm_name          = "${tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]}-cpu-utilization"
+  # Shared alarm defaults — change here to apply consistently across all non-serverless alarms
+  alarm_namespace           = "AWS/ElastiCache"
+  alarm_period              = 60
+  alarm_treat_missing_data  = "notBreaching"
+  alarm_evaluation_periods  = 5
+  alarm_datapoints_to_alarm = 5
+}
+
+resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
+  for_each = local.member_clusters
+
+  alarm_name          = "${each.key}-cpu-utilization"
   alarm_description   = "Redis host CPU utilization"
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 5
-  datapoints_to_alarm = 5
+  evaluation_periods  = local.alarm_evaluation_periods
+  datapoints_to_alarm = local.alarm_datapoints_to_alarm
   threshold           = var.alarm_cpu_threshold_percent
-  namespace           = "AWS/ElastiCache"
+  namespace           = local.alarm_namespace
   metric_name         = "CPUUtilization"
-  period              = 60
+  period              = local.alarm_period
   statistic           = "Average"
-  treat_missing_data  = "notBreaching"
+  treat_missing_data  = local.alarm_treat_missing_data
 
   tags = var.tags
 
   dimensions = {
-    CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
+    CacheClusterId = each.key
   }
 
   alarm_actions = var.alarm_actions
   ok_actions    = var.ok_actions
-
-  depends_on = [aws_elasticache_replication_group.this]
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_engine_cpu" {
-  count = var.enabled && !var.use_serverless ? local.num_nodes : 0
+  for_each = local.member_clusters
 
-  alarm_name          = "${tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]}-engine-cpu-utilization"
+  alarm_name          = "${each.key}-engine-cpu-utilization"
   alarm_description   = "Redis engine CPU utilization"
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 5
-  datapoints_to_alarm = 5
+  evaluation_periods  = local.alarm_evaluation_periods
+  datapoints_to_alarm = local.alarm_datapoints_to_alarm
   threshold           = var.alarm_engine_cpu_threshold_percent
-  namespace           = "AWS/ElastiCache"
+  namespace           = local.alarm_namespace
   metric_name         = "EngineCPUUtilization"
-  period              = 60
+  period              = local.alarm_period
   statistic           = "Average"
-  treat_missing_data  = "notBreaching"
+  treat_missing_data  = local.alarm_treat_missing_data
 
   tags = var.tags
 
   dimensions = {
-    CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
+    CacheClusterId = each.key
   }
 
   alarm_actions = var.alarm_actions
   ok_actions    = var.ok_actions
-
-  depends_on = [aws_elasticache_replication_group.this]
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_memory" {
-  count = var.enabled && !var.use_serverless ? local.num_nodes : 0
+  for_each = local.member_clusters
 
-  alarm_name          = "${tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]}-freeable-memory"
+  alarm_name          = "${each.key}-freeable-memory"
   alarm_description   = "Redis host freeable memory drops below threshold"
   comparison_operator = "LessThanThreshold"
-  evaluation_periods  = 5
-  datapoints_to_alarm = 5
+  evaluation_periods  = local.alarm_evaluation_periods
+  datapoints_to_alarm = local.alarm_datapoints_to_alarm
   threshold           = var.alarm_memory_threshold_bytes
-  namespace           = "AWS/ElastiCache"
+  namespace           = local.alarm_namespace
   metric_name         = "FreeableMemory"
-  period              = 60
+  period              = local.alarm_period
   statistic           = "Average"
-  treat_missing_data  = "notBreaching"
+  treat_missing_data  = local.alarm_treat_missing_data
 
   tags = var.tags
 
   dimensions = {
-    CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
+    CacheClusterId = each.key
   }
 
   alarm_actions = var.alarm_actions
   ok_actions    = var.ok_actions
-
-  depends_on = [aws_elasticache_replication_group.this]
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_evictions" {
-  count = var.enabled && !var.use_serverless ? local.num_nodes : 0
+  for_each = local.member_clusters
 
-  alarm_name          = "${tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]}-evictions"
+  alarm_name          = "${each.key}-evictions"
   alarm_description   = "Redis evictions due to maxmemory limit"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   datapoints_to_alarm = 1
   threshold           = var.alarm_evictions_threshold
-  namespace           = "AWS/ElastiCache"
+  namespace           = local.alarm_namespace
   metric_name         = "Evictions"
-  period              = 60
+  period              = local.alarm_period
   statistic           = "Sum"
-  treat_missing_data  = "notBreaching"
+  treat_missing_data  = local.alarm_treat_missing_data
 
   tags = var.tags
 
   dimensions = {
-    CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
+    CacheClusterId = each.key
   }
 
   alarm_actions = var.alarm_actions
   ok_actions    = var.ok_actions
-
-  depends_on = [aws_elasticache_replication_group.this]
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_curr_connections" {
-  count = var.enabled && !var.use_serverless && var.alarm_curr_connections_threshold != null ? local.num_nodes : 0
+  for_each = var.alarm_curr_connections_threshold != null ? local.member_clusters : toset([])
 
-  alarm_name          = "${tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]}-curr-connections"
+  alarm_name          = "${each.key}-curr-connections"
   alarm_description   = "Redis client connections"
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 5
-  datapoints_to_alarm = 5
+  evaluation_periods  = local.alarm_evaluation_periods
+  datapoints_to_alarm = local.alarm_datapoints_to_alarm
   threshold           = var.alarm_curr_connections_threshold
-  namespace           = "AWS/ElastiCache"
+  namespace           = local.alarm_namespace
   metric_name         = "CurrConnections"
-  period              = 60
+  period              = local.alarm_period
   statistic           = "Average"
-  treat_missing_data  = "notBreaching"
+  treat_missing_data  = local.alarm_treat_missing_data
 
   tags = var.tags
 
   dimensions = {
-    CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
+    CacheClusterId = each.key
   }
 
   alarm_actions = var.alarm_actions
   ok_actions    = var.ok_actions
-
-  depends_on = [aws_elasticache_replication_group.this]
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_replication_lag" {
-  count = var.enabled && !var.use_serverless ? local.num_nodes : 0
+  for_each = local.member_clusters
 
-  alarm_name          = "${tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]}-replication-lag"
+  alarm_name          = "${each.key}-replication-lag"
   alarm_description   = "Redis replication lag"
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 5
-  datapoints_to_alarm = 5
+  evaluation_periods  = local.alarm_evaluation_periods
+  datapoints_to_alarm = local.alarm_datapoints_to_alarm
   threshold           = var.alarm_replication_lag_threshold_seconds
-  namespace           = "AWS/ElastiCache"
+  namespace           = local.alarm_namespace
   metric_name         = "ReplicationLag"
-  period              = 60
+  period              = local.alarm_period
   statistic           = "Maximum"
-  treat_missing_data  = "notBreaching"
+  treat_missing_data  = local.alarm_treat_missing_data
 
   tags = var.tags
 
   dimensions = {
-    CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
+    CacheClusterId = each.key
   }
 
   alarm_actions = var.alarm_actions
   ok_actions    = var.ok_actions
-
-  depends_on = [aws_elasticache_replication_group.this]
 }
 
 # ElastiCache Serverless
 resource "aws_cloudwatch_metric_alarm" "cache_serverless_ecpu" {
   count = var.enabled && var.use_serverless ? 1 : 0
 
-  alarm_name          = "${aws_elasticache_serverless_cache.this[0].name}-ecpu-utilization"
+  alarm_name          = "${local.serverless_cache_name}-ecpu-utilization"
   alarm_description   = "Redis serverless ECPU utilization"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   threshold           = ceil(var.max_ecpu_per_second * var.alarm_ecpu_threshold_percent / 100)
-  namespace           = "AWS/ElastiCache"
+  namespace           = local.alarm_namespace
   metric_name         = "ElastiCacheProcessingUnits"
   period              = 300
   statistic           = "Average"
@@ -177,7 +177,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_ecpu" {
   tags = var.tags
 
   dimensions = {
-    CacheClusterId = aws_elasticache_serverless_cache.this[0].name
+    CacheClusterId = local.serverless_cache_name
   }
 
   alarm_actions = var.alarm_actions
@@ -187,20 +187,20 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_ecpu" {
 resource "aws_cloudwatch_metric_alarm" "cache_serverless_data" {
   count = var.enabled && var.use_serverless ? 1 : 0
 
-  alarm_name          = "${aws_elasticache_serverless_cache.this[0].name}-data-storage"
+  alarm_name          = "${local.serverless_cache_name}-data-storage"
   alarm_description   = "Redis serverless data storage"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   threshold           = ceil((var.max_data_storage * 1000 * 1000 * 1000) * var.alarm_data_threshold_percent / 100)
-  namespace           = "AWS/ElastiCache"
+  namespace           = local.alarm_namespace
   metric_name         = "BytesUsedForCache"
-  period              = 60
+  period              = local.alarm_period
   statistic           = "Average"
 
   tags = var.tags
 
   dimensions = {
-    CacheClusterId = aws_elasticache_serverless_cache.this[0].name
+    CacheClusterId = local.serverless_cache_name
   }
 
   alarm_actions = var.alarm_actions
@@ -210,20 +210,20 @@ resource "aws_cloudwatch_metric_alarm" "cache_serverless_data" {
 resource "aws_cloudwatch_metric_alarm" "cache_serverless_throttled_commands" {
   count = var.enabled && var.use_serverless ? 1 : 0
 
-  alarm_name          = "${aws_elasticache_serverless_cache.this[0].name}-throttled-commands"
+  alarm_name          = "${local.serverless_cache_name}-throttled-commands"
   alarm_description   = "Redis serverless throttled commands"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   threshold           = 0
-  namespace           = "AWS/ElastiCache"
+  namespace           = local.alarm_namespace
   metric_name         = "ThrottledCmds"
-  period              = 60
+  period              = local.alarm_period
   statistic           = "Average"
 
   tags = var.tags
 
   dimensions = {
-    CacheClusterId = aws_elasticache_serverless_cache.this[0].name
+    CacheClusterId = local.serverless_cache_name
   }
 
   alarm_actions = var.alarm_actions
