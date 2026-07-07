@@ -93,6 +93,24 @@ variable "alarm_data_threshold_percent" {
   default     = 75
 }
 
+variable "alarm_engine_cpu_threshold_percent" {
+  description = "Engine CPU threshold alarm level"
+  type        = number
+  default     = 90
+}
+
+variable "alarm_evictions_threshold" {
+  description = "Evictions threshold alarm level"
+  type        = number
+  default     = 0
+}
+
+variable "alarm_replication_lag_threshold_seconds" {
+  description = "Replication lag threshold alarm level in seconds"
+  type        = number
+  default     = 5
+}
+
 variable "notification_topic_arn" {
   description = "ARN of an SNS topic to send ElastiCache notifications"
   type        = string

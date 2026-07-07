@@ -60,6 +60,102 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
   ]
 }
 
+resource "aws_cloudwatch_metric_alarm" "cache_engine_cpu" {
+  count = var.enabled && !var.use_serverless ? local.num_nodes : 0
+
+  alarm_name        = "${tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]}-engine-cpu-utilization"
+  alarm_description = "Redis cluster engine CPU utilization"
+
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+
+  metric_name = "EngineCPUUtilization"
+  namespace   = "AWS/ElastiCache"
+
+  period    = 300
+  statistic = "Average"
+
+  tags = var.tags
+
+  threshold = var.alarm_engine_cpu_threshold_percent
+
+  dimensions = {
+    CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
+  }
+
+  alarm_actions = var.alarm_actions
+  ok_actions    = var.ok_actions
+
+  depends_on = [
+    aws_elasticache_replication_group.this
+  ]
+}
+
+resource "aws_cloudwatch_metric_alarm" "cache_evictions" {
+  count = var.enabled && !var.use_serverless ? local.num_nodes : 0
+
+  alarm_name        = "${tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]}-evictions"
+  alarm_description = "Redis cluster evictions"
+
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+
+  metric_name = "Evictions"
+  namespace   = "AWS/ElastiCache"
+
+  period    = 60
+  statistic = "Sum"
+
+  tags = var.tags
+
+  threshold = var.alarm_evictions_threshold
+
+  dimensions = {
+    CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
+  }
+
+  alarm_actions = var.alarm_actions
+  ok_actions    = var.ok_actions
+
+  depends_on = [
+    aws_elasticache_replication_group.this
+  ]
+}
+
+resource "aws_cloudwatch_metric_alarm" "cache_replication_lag" {
+  count = var.enabled && !var.use_serverless ? local.num_nodes : 0
+
+  alarm_name        = "${tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]}-replication-lag"
+  alarm_description = "Redis cluster replication lag"
+
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+
+  metric_name = "ReplicationLag"
+  namespace   = "AWS/ElastiCache"
+
+  period    = 60
+  statistic = "Average"
+
+  tags = var.tags
+
+  threshold = var.alarm_replication_lag_threshold_seconds
+
+  # Primary nodes do not emit this metric, so missing data should not alarm.
+  treat_missing_data = "notBreaching"
+
+  dimensions = {
+    CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
+  }
+
+  alarm_actions = var.alarm_actions
+  ok_actions    = var.ok_actions
+
+  depends_on = [
+    aws_elasticache_replication_group.this
+  ]
+}
+
 # ElastiCache Serverless
 resource "aws_cloudwatch_metric_alarm" "cache_serverless_ecpu" {
   count = var.enabled && var.use_serverless ? 1 : 0
