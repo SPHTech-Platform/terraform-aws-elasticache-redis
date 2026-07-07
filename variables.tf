@@ -114,7 +114,7 @@ variable "alarm_replication_lag_threshold_seconds" {
 variable "alarm_curr_connections_threshold" {
   description = "Current connections threshold alarm level. Adjust to suit the connection limit of the chosen instance type."
   type        = number
-  default     = 20000
+  default     = null
 }
 
 variable "notification_topic_arn" {

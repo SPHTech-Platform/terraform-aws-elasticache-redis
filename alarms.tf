@@ -77,7 +77,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_engine_cpu" {
 
   tags = var.tags
 
-  threshold = var.alarm_ecpu_threshold_percent
+  threshold = var.alarm_engine_cpu_threshold_percent
 
   dimensions = {
     CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
