@@ -133,7 +133,8 @@ resource "aws_cloudwatch_metric_alarm" "cache_replication_lag" {
   alarm_description = "Redis cluster replication lag"
 
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 1
+  evaluation_periods  = 5
+  datapoints_to_alarm = 5
 
   metric_name = "ReplicationLag"
   namespace   = "AWS/ElastiCache"
@@ -167,7 +168,8 @@ resource "aws_cloudwatch_metric_alarm" "cache_curr_connections" {
   alarm_description = "Redis cluster current connections"
 
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 1
+  evaluation_periods  = 5
+  datapoints_to_alarm = 5
 
   metric_name = "CurrConnections"
   namespace   = "AWS/ElastiCache"
