@@ -96,7 +96,7 @@ variable "alarm_data_threshold_percent" {
 variable "alarm_engine_cpu_threshold_percent" {
   description = "Engine CPU threshold alarm level"
   type        = number
-  default     = 90
+  default     = 80
 }
 
 variable "alarm_evictions_threshold" {
@@ -109,6 +109,12 @@ variable "alarm_replication_lag_threshold_seconds" {
   description = "Replication lag threshold alarm level in seconds"
   type        = number
   default     = 5
+}
+
+variable "alarm_curr_connections_threshold" {
+  description = "Current connections threshold alarm level. Adjust to suit the connection limit of the chosen instance type."
+  type        = number
+  default     = 20000
 }
 
 variable "notification_topic_arn" {

@@ -77,7 +77,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_engine_cpu" {
 
   tags = var.tags
 
-  threshold = var.alarm_engine_cpu_threshold_percent
+  threshold = var.alarm_ecpu_threshold_percent
 
   dimensions = {
     CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
@@ -143,6 +143,37 @@ resource "aws_cloudwatch_metric_alarm" "cache_replication_lag" {
 
   # Primary nodes do not emit this metric, so missing data should not alarm.
   treat_missing_data = "notBreaching"
+
+  dimensions = {
+    CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
+  }
+
+  alarm_actions = var.alarm_actions
+  ok_actions    = var.ok_actions
+
+  depends_on = [
+    aws_elasticache_replication_group.this
+  ]
+}
+
+resource "aws_cloudwatch_metric_alarm" "cache_curr_connections" {
+  count = var.enabled && !var.use_serverless ? local.num_nodes : 0
+
+  alarm_name        = "${tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]}-curr-connections"
+  alarm_description = "Redis cluster current connections"
+
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+
+  metric_name = "CurrConnections"
+  namespace   = "AWS/ElastiCache"
+
+  period    = 60
+  statistic = "Average"
+
+  tags = var.tags
+
+  threshold = var.alarm_curr_connections_threshold
 
   dimensions = {
     CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]

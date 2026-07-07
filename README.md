@@ -10,7 +10,7 @@
 
 | Name | Version |
 | ---- | ------- |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.51.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.53.0 |
 
 ## Modules
 
@@ -21,7 +21,11 @@ No modules.
 | Name | Type |
 | ---- | ---- |
 | [aws_cloudwatch_metric_alarm.cache_cpu](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.cache_curr_connections](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.cache_engine_cpu](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.cache_evictions](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_cloudwatch_metric_alarm.cache_memory](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.cache_replication_lag](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_cloudwatch_metric_alarm.cache_serverless_data](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_cloudwatch_metric_alarm.cache_serverless_ecpu](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_cloudwatch_metric_alarm.cache_serverless_throttled_commands](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
@@ -36,9 +40,13 @@ No modules.
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_alarm_actions"></a> [alarm\_actions](#input\_alarm\_actions) | The list of actions to execute when this alarm transitions into an ALARM state from any other state. | `list(string)` | `[]` | no |
 | <a name="input_alarm_cpu_threshold_percent"></a> [alarm\_cpu\_threshold\_percent](#input\_alarm\_cpu\_threshold\_percent) | CPU threshold alarm level | `number` | `75` | no |
+| <a name="input_alarm_curr_connections_threshold"></a> [alarm\_curr\_connections\_threshold](#input\_alarm\_curr\_connections\_threshold) | Current connections threshold alarm level. Adjust to suit the connection limit of the chosen instance type. | `number` | `20000` | no |
 | <a name="input_alarm_data_threshold_percent"></a> [alarm\_data\_threshold\_percent](#input\_alarm\_data\_threshold\_percent) | Data threshold alarm level for elasticache serverless | `number` | `75` | no |
 | <a name="input_alarm_ecpu_threshold_percent"></a> [alarm\_ecpu\_threshold\_percent](#input\_alarm\_ecpu\_threshold\_percent) | ECPU threshold alarm level for elasticache serverless | `number` | `75` | no |
+| <a name="input_alarm_engine_cpu_threshold_percent"></a> [alarm\_engine\_cpu\_threshold\_percent](#input\_alarm\_engine\_cpu\_threshold\_percent) | Engine CPU threshold alarm level | `number` | `90` | no |
+| <a name="input_alarm_evictions_threshold"></a> [alarm\_evictions\_threshold](#input\_alarm\_evictions\_threshold) | Evictions threshold alarm level | `number` | `0` | no |
 | <a name="input_alarm_memory_threshold_bytes"></a> [alarm\_memory\_threshold\_bytes](#input\_alarm\_memory\_threshold\_bytes) | Alarm memory threshold bytes | `number` | `10000000` | no |
+| <a name="input_alarm_replication_lag_threshold_seconds"></a> [alarm\_replication\_lag\_threshold\_seconds](#input\_alarm\_replication\_lag\_threshold\_seconds) | Replication lag threshold alarm level in seconds | `number` | `5` | no |
 | <a name="input_apply_immediately"></a> [apply\_immediately](#input\_apply\_immediately) | Specifies whether any database modifications are applied immediately, or during the next maintenance window | `bool` | `true` | no |
 | <a name="input_at_rest_encryption_enabled"></a> [at\_rest\_encryption\_enabled](#input\_at\_rest\_encryption\_enabled) | Whether to enable encryption at rest | `string` | `true` | no |
 | <a name="input_auth_token"></a> [auth\_token](#input\_auth\_token) | Password used to access a password protected server. Can be specified only if `transit_encryption_enabled = true` | `string` | `null` | no |
