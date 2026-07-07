@@ -157,7 +157,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_replication_lag" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_curr_connections" {
-  count = var.enabled && !var.use_serverless ? local.num_nodes : 0
+  count = var.enabled && !var.use_serverless && var.alarm_curr_connections_threshold != null ? local.num_nodes : 0
 
   alarm_name        = "${tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]}-curr-connections"
   alarm_description = "Redis cluster current connections"
