@@ -6,6 +6,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
 
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
+  datapoints_to_alarm = 1
 
   metric_name = "CPUUtilization"
   namespace   = "AWS/ElastiCache"
@@ -38,6 +39,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
 
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = 1
+  datapoints_to_alarm = 1
 
   metric_name = "FreeableMemory"
   namespace   = "AWS/ElastiCache"
@@ -70,6 +72,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_engine_cpu" {
 
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
+  datapoints_to_alarm = 1
 
   metric_name = "EngineCPUUtilization"
   namespace   = "AWS/ElastiCache"
@@ -102,6 +105,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_evictions" {
 
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
+  datapoints_to_alarm = 1
 
   metric_name = "Evictions"
   namespace   = "AWS/ElastiCache"
