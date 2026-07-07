@@ -15,7 +15,8 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
 
   tags = var.tags
 
-  threshold = var.alarm_cpu_threshold_percent
+  threshold          = var.alarm_cpu_threshold_percent
+  treat_missing_data = "notBreaching"
 
   dimensions = {
     CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
@@ -44,7 +45,8 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
   period    = 60
   statistic = "Average"
 
-  threshold = var.alarm_memory_threshold_bytes
+  threshold          = var.alarm_memory_threshold_bytes
+  treat_missing_data = "notBreaching"
 
   tags = var.tags
 
@@ -77,7 +79,8 @@ resource "aws_cloudwatch_metric_alarm" "cache_engine_cpu" {
 
   tags = var.tags
 
-  threshold = var.alarm_engine_cpu_threshold_percent
+  threshold          = var.alarm_engine_cpu_threshold_percent
+  treat_missing_data = "notBreaching"
 
   dimensions = {
     CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
@@ -108,7 +111,8 @@ resource "aws_cloudwatch_metric_alarm" "cache_evictions" {
 
   tags = var.tags
 
-  threshold = var.alarm_evictions_threshold
+  threshold          = var.alarm_evictions_threshold
+  treat_missing_data = "notBreaching"
 
   dimensions = {
     CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
@@ -129,7 +133,8 @@ resource "aws_cloudwatch_metric_alarm" "cache_replication_lag" {
   alarm_description = "Redis cluster replication lag"
 
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 1
+  evaluation_periods  = 5
+  datapoints_to_alarm = 5
 
   metric_name = "ReplicationLag"
   namespace   = "AWS/ElastiCache"
@@ -163,7 +168,8 @@ resource "aws_cloudwatch_metric_alarm" "cache_curr_connections" {
   alarm_description = "Redis cluster current connections"
 
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 1
+  evaluation_periods  = 5
+  datapoints_to_alarm = 5
 
   metric_name = "CurrConnections"
   namespace   = "AWS/ElastiCache"
@@ -173,7 +179,8 @@ resource "aws_cloudwatch_metric_alarm" "cache_curr_connections" {
 
   tags = var.tags
 
-  threshold = var.alarm_curr_connections_threshold
+  threshold          = var.alarm_curr_connections_threshold
+  treat_missing_data = "notBreaching"
 
   dimensions = {
     CacheClusterId = tolist(aws_elasticache_replication_group.this[0].member_clusters)[count.index]
